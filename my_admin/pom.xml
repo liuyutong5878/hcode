@@ -4,4 +4,19 @@
   <artifactId>my_admin</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
+  
+  <build>
+	  <plugins>  
+	        <!-- jetty插件 -->  
+	        <plugin>  
+	            <groupId>org.mortbay.jetty</groupId>  
+	            <artifactId>maven-jetty-plugin</artifactId>  
+	            <version>6.1.5</version>  
+	            <configuration>  
+	                <contextPath>/</contextPath>  
+	            </configuration>  
+	        </plugin>  
+	  </plugins>
+  </build>
+  
 </project>
