@@ -9,7 +9,8 @@
 <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <style type="text/css">
 	.panel-primary{margin-left:20px;width: 200px;}
-	#accordion{float:left;margin-right:5px;}
+	#accordion{margin-right:5px;}
+	.tabWrap{position:absolute;left:240px;top:63px;}
 </style>
 </head>
 <body>
@@ -65,22 +66,23 @@
 		</div>
 	</div>
 	
-<!-- 	<iframe style="border:solid 1px #ccc;" id="home"> -->
-<!-- 		这是页面 -->
-<!-- 	</iframe> -->
+	<iframe style="border:solid 1px #ccc;display:none;" id="home">
+		
+	</iframe>
 	
-	<ul id="myTab" class="nav nav-tabs">
-		<li class="active">
-	      <a href="#home" data-content="neir" data-toggle="tab">
-	         W3Cschool Home
-	      </a>
-   		</li>
-   		<li >
-	      <a href="#home2" data-toggle="tab">
-	         hjsns
-	      </a>
-   		</li>
-	</ul>
-	
+	<div class="tabWrap">
+		<ul id="myTab" class="nav nav-tabs" style="border-bottom:none;">
+			<li class="active">
+		      <a href="#home" data-toggle="tab">
+		         W3Cschool Home
+		      </a>
+	   		</li>
+	   		<li >
+		      <a href="#home2" data-toggle="tab">
+		         hjsns
+		      </a>
+	   		</li>
+		</ul>
+	</div>
 </body>
 </html>
