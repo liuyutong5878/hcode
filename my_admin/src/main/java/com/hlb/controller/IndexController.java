@@ -25,7 +25,7 @@ public class IndexController {
 		
 		try {
 			String htm = HttpUtil.get(url);
-			System.out.println("·µ»Ø---" +  htm);
+			System.out.println("·µ»Øhtml---" +  htm);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
