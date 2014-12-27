@@ -9,9 +9,16 @@
 <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <style type="text/css">
 	.panel-primary{margin-left:20px;width: 200px;}
-	#accordion{margin-right:5px;}
+	#accordion{margin-right:5px; float:left;}
 	.tabWrap{position:absolute;left:240px;top:63px;}
 </style>
+
+<script type="text/javascript">
+	$(function(){
+
+	});
+</script>
+
 </head>
 <body>
 	<div class="panel panel-default" >
@@ -27,11 +34,12 @@
 		   	</h3>
 		   	</div>
 		   <ul class="list-group panel-collapse collapse in" id="collapseOne">
-		      <li class="list-group-item">免费域名注册</li>
+		      <li class="list-group-item" ><a href="http://yunpan.cn/cfXb7hfxvBmev" target="myfrm">转360</a></li>
 		      <li class="list-group-item">免费 Window 空间托管</li>
 		      <li class="list-group-item">图像的数量</li>
 		      <li class="list-group-item">24*7 支持</li>
-		      <li class="list-group-item">每年更新成本</li>
+		      <li class="list-group-item"><a href="javascript:setPwd()">设置</a></li>
+		      
 		   </ul>
 		</div>
 		
@@ -66,7 +74,7 @@
 		</div>
 	</div>
 	
-	<iframe style="border:solid 1px #ccc;display:none;" id="home">
+	<iframe style="border:solid 1px #ccc;width:1000px;height:800px; display:block;" id="home" name="myfrm">
 		
 	</iframe>
 	

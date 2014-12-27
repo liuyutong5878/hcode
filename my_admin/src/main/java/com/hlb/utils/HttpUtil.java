@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 public class HttpUtil {
 
@@ -53,6 +55,10 @@ public class HttpUtil {
 		try {
 			URL url = new URL(addr);
 			conn = (HttpURLConnection) url.openConnection();
+			Map<String,List<String>> reqmap = conn.getRequestProperties();
+			conn.setRequestProperty("Referer", "http://adrm5pblpm.l77.yunpan.cn/lk/cfXb7hfxvBmev");
+			conn.setRequestProperty("Host", "adrm5pblpm.l77.yunpan.cn");
+			System.out.println(reqmap);
 			conn.setRequestMethod("POST");
 			conn.setConnectTimeout(15000);
 			conn.setReadTimeout(15000);
@@ -78,5 +84,10 @@ public class HttpUtil {
 				conn.getInputStream().close(); //只释放实例资源
 			}
 		}
+	}
+	
+	public static void main(String[] args) {
+		String s = "\u767b\u9646\u5931\u8d25";
+		System.out.println(s);
 	}
 }

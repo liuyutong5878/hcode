@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>登陆系统</title>
+<title>Login</title>
 <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
 <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
@@ -13,18 +13,18 @@
 
 <body>
 	<div class="center-block" style="width:600px;background-color:#fff;margin-top:100px;padding-left:50px;">
-		<form class="form-horizontal" role="form">
+		<form class="form-horizontal" role="form" action="/admin/main/doLogin.htm">
 		   <div class="form-group">
 		      <label for="firstname" class="col-sm-2 control-label">UserName</label>
 		      <div class="col-sm-6">
-		         <input type="text" class="form-control" id="firstname" 
+		         <input type="text" class="form-control" id="firstname" name="userName"
 		            placeholder="userName">
 		      </div>
 		   </div>
 		   <div class="form-group">
 		      <label for="lastname" class="col-sm-2 control-label">Password</label>
 		      <div class="col-sm-6">
-		         <input type="text" class="form-control" id="lastname" 
+		         <input type="text" class="form-control" id="lastname" name="password"
 		            placeholder="password">
 		      </div>
 		   </div>
