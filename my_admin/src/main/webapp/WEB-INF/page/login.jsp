@@ -13,7 +13,7 @@
 
 <body>
 	<div class="center-block" style="width:600px;background-color:#fff;margin-top:100px;padding-left:50px;">
-		<form class="form-horizontal" role="form" action="/admin/main/doLogin.htm">
+		<form class="form-horizontal" role="form" action="/main/doLogin.htm">
 		   <div class="form-group">
 		      <label for="firstname" class="col-sm-2 control-label">UserName</label>
 		      <div class="col-sm-6">
