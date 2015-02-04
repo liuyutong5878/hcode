@@ -1,7 +1,5 @@
 package com.hlb.service.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +7,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import com.hlb.model.User;
@@ -65,19 +62,12 @@ public class UserServiceImpl implements UserService{
 
 	public boolean isExist(User user) {
 		String sql = "select id, username, password from admin_user where username = ? and password = ?";
-		User rtUser = jdbc.queryForObject(sql,new Object[]{user.getUserName(), user.getPassword()}, new RowMapper<User>() {
-			@Override
-			public User mapRow(ResultSet rs, int arg1) throws SQLException {
-				User user = new User();
-				user.setId(rs.getInt("id"));
-				user.setUserName(rs.getString("username"));
-				user.setPassword(rs.getString("password"));
-				return user;
-			}
-			
-		});
-		if(rtUser == null) return false;
-		else return true;
+		List<User> users = jdbc.query(sql, new Object[]{user.getUserName(), user.getPassword()},new BeanPropertyRowMapper<User>(User.class));
+		if(users == null || users.size() <= 0){
+			return false;
+		}else{
+			return true;
+		}
 	}
 
 	@Override

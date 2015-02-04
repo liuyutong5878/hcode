@@ -13,6 +13,7 @@ import com.hlb.model.User;
 import com.hlb.model.WebUser;
 import com.hlb.service.UserService;
 import com.hlb.service.WebUserService;
+import com.hlb.utils.ConstantUtil;
 
 @Controller
 @RequestMapping("/main")
@@ -27,16 +28,16 @@ public class UserController {
 	
 	@RequestMapping("/showLogin")
 	public String showLogin(){
-		//TODO ��֤��
 		
 		return "/login";
 	}
 	
 	@RequestMapping("/doLogin")
-	public String doLogin(User user){
+	public String doLogin(User user,HttpServletRequest request){
 		if(!userService.isExist(user)){
 			return "redirect:/main/showLogin.htm";
 		}else{
+			request.getSession().setAttribute(ConstantUtil.SESSION_USER, user);
 			return "redirect:/main/index.htm";
 		}
 	}
@@ -51,6 +52,12 @@ public class UserController {
 		List<WebUser> ulist = webUserService.getAll();
 		model.addAttribute("ulist", ulist);
 		return "/user/user_list";
+	}
+	
+	@RequestMapping("/logout")
+	public String logout(HttpServletRequest request){
+		request.getSession().removeAttribute(ConstantUtil.SESSION_USER);
+		return "redirect:/main/showLogin.htm";
 	}
 	
 }

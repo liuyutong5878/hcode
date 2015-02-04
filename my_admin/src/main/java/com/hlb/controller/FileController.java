@@ -1,12 +1,10 @@
 package com.hlb.controller;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.RequestWrapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,12 +12,15 @@ import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.google.gson.Gson;
 import com.hlb.model.Attachment;
+import com.hlb.model.Music;
 import com.hlb.service.AttachmentService;
+import com.hlb.service.MusicService;
 
 @Controller
 @RequestMapping("/file")
@@ -27,6 +28,9 @@ public class FileController {
 
 	@Autowired
 	private AttachmentService attachmentService;
+	
+	@Autowired
+	private MusicService musicService;
 	
 	@RequestMapping(value="/upload",method=RequestMethod.POST)
 	public String upload(HttpServletRequest request){
@@ -71,6 +75,18 @@ public class FileController {
 		return "/attachment/file_list";
 	}
 	
+	@ResponseBody
+	@RequestMapping(value="/updateMusicLib")
+	public String updateMusicLib(HttpServletRequest request){
+		List<Music> musics = musicService.listAll();
+		File file = new File("E:/audio_lib");
+		int rows = 0;
+		Gson gson = new Gson();
+		if(file.list().length != musics.size()){
+			rows = musicService.batchUpdate();
+		}
+		return gson.toJson("成功更新" + rows + "条记录！"); 
+	}
 	
 	
 	public String deleteFile(HttpServletRequest request){

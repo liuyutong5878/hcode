@@ -35,6 +35,9 @@
 <body>
 	<div class="panel panel-default" >
 		<div class="panel-heading" style="height:40px;">
+			您好！${sessionScope.user.userName}欢迎登陆 || 
+			<a href="/main/logout.htm">退出</a>
+			<embed style="width:80px;height:30px;" class="pull-right" src="http://chabudai.sakura.ne.jp/blogparts/honehoneclock/honehone_clock_wh.swf"/>
 		</div>
 	</div>
 	
@@ -61,6 +64,7 @@
 			   </div>
 			   <ul class="list-group panel-collapse collapse" id="collapseTwo">
 			      <li class="list-group-item"><a href="/file/list.htm" target="rt_page">文件列表</a></li>
+			      <li class="list-group-item"><a href="/music/showList.htm" target="rt_page">曲库管理</a></li>
 			   </ul>
 			</div>
 			
@@ -84,8 +88,6 @@
 	  	<iframe name="rt_page" style="border:none;" width="100%;" height="1000px;"></iframe>
 	  </div>
 	</div>
-	
-	
 <!-- 	<div class="tabWrap">
 		<ul id="myTab" class="nav nav-tabs" style="border-bottom:none;">
 			<li class="active">

@@ -10,7 +10,6 @@
 </head>
 
 
-
 <body>
 	<div class="center-block" style="width:600px;background-color:#fff;margin-top:100px;padding-left:50px;">
 		<form class="form-horizontal" role="form" action="/main/doLogin.htm">
@@ -24,11 +23,11 @@
 		   <div class="form-group">
 		      <label for="lastname" class="col-sm-2 control-label">Password</label>
 		      <div class="col-sm-6">
-		         <input type="text" class="form-control" id="lastname" name="password"
+		         <input type="password" class="form-control" id="lastname" name="password"
 		            placeholder="password">
 		      </div>
 		   </div>
-		   <div class="form-group">
+		   <!-- <div class="form-group">
 		      <div class="col-sm-offset-2 col-sm-10">
 		         <div class="checkbox">
 		            <label>
@@ -36,10 +35,10 @@
 		            </label>
 		         </div>
 		      </div>
-		   </div>
+		   </div> -->
 		   <div class="form-group">
 		      <div class="col-sm-offset-2 col-sm-10">
-		         <button type="submit" class="btn btn-default">Login</button>
+		         <button type="submit" class="btn btn-primary">登陆</button>
 		      </div>
 		   </div>
 		</form>

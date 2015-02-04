@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>首页</title>
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css">
+<link rel="stylesheet" type="text/css" href="../plugin/css/style.css">
+<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/demo.css">
+<script type="text/javascript" src="../plugin/jquery-jplayer/jquery.jplayer.js"></script>
+<script type="text/javascript" src="../plugin/ttw-music-player-min.js"></script>
+<link href="http://m.kugou.com/v2/static/css/style.css?20130320" rel="stylesheet" type="text/css"/>
+
+<style>
+	.ui-grid-a{
+		background-color:#ccc;
+		margin-top:5px;
+		height:40px;
+		font-family:'Microsoft YaHei';
+		font-weight: bold;
+	}
+	.row-line{
+		line-height:40px;
+		background-color:#ccc; 
+	}
+	.ui-block-b{
+		text-align:right;
+	}
+	#pageone{
+		background:url("images/bg.jpg") repeat scroll 0 0 #444;
+		background-size :100% 100%;
+	}
+	
+</style>
+</head>
+<body>
+
+	<div data-role="page" id="pageone">
+	  <div data-role="header">
+	    <h1> welcome home</h1>
+		<div data-role="navbar">
+	      <ul>
+	        <li class="page-now"><a href="#" data-icon="home">首页</a></li>
+	        <li><a href="/discovery.html" target="_self" data-icon="arrow-l">发现</a></li>
+			<li><a href="#" data-icon="arrow-r">歌手</a></li>
+	        <li><a href="#" data-icon="search">搜索</a></li>
+	      </ul>
+   		</div>
+	  </div>
+	
+	  <div class="mycontent" data-role="content" >
+			
+	  </div>
+
+		<!-- <div id="audio-wrap" style="background-color:#666;">
+		</div> -->
+		
+	  <!--S mod_player -->
+		<!-- <div class="mod_player" id="mod_player">
+			<div class="songname"><span id="songname">Click to play!</span></div>
+			<div class="control">
+				<div id="btn_main" class="btn_play"><span></span></div>
+				<div id="btn_next" class="btn btn_next"><span></span></div>
+			</div>
+		</div> -->
+	<!--E mod_player -->
+	
+	  <!-- <div data-role="footer">
+	  <h1>底部</h1>
+	  </div> -->
+	</div> 
+</body>
+<script>
+	var mypage = {
+		init:function(){
+// 			this.waitLoad();
+			$.ajax({
+				async:false,
+				type:'post',
+				url:'/index/init.htm',
+				dataType:'json',
+				success:function(data){
+					//插件方式
+					var music;
+					for(var i=0; i<data.length; i++){
+						music = {
+							  mp3:'/music/' + data[i].id + "/load.htm",
+// 							  mp3:'/sound/song.mp3',
+// 		                      oga:'mix/1.ogg',
+		                      title:data[i].singer+"-"+data[i].name,
+// 		                      artist:data[i].singer,
+		                      rating:4,
+		                      buy:data[i].downloadUrl,	//buy字段换成下载链接字段
+		                      //price:'0.99',
+		                      duration:data[i].time,
+		                      cover:'mix/1.png'
+						}; 
+						mypage.myPlaylist.push(music);
+					}
+					//原始方式
+					/* var htm = '';
+					var htms = '';
+					for(var i=0; i<data.length; i++){
+						htm = '<div class="ui-grid-a">';
+						htm += '<div class="ui-block-a row-line"><span>'+decodeURI(data[i].name).replace(/[\+]+/g, " ")+'</span></div>';
+						htm += '<div class="ui-block-b row-line">';
+						htm += '<img src="images/play.png"  width="20px" class="play" onclick="javascript:mypage.play(\''+decodeURI(data[i].url).replace(/[\+]+/g, " ")+'\');">';
+						htm += '<img src="images/down.png"  width="20px" height="18px">';
+						htm += '</div></div>';
+						htms += htm;
+					}
+					$(".mycontent").empty();
+					$(".mycontent").append(htms); */
+				},
+				error:function(err){
+					alert("读取服务器失败");
+					mypage.afterLoad();
+				},
+			});
+		},
+		waitLoad:function(){
+			$(".mycontent").attr({"style":"height:360px;text-align:center;"});
+			$(".mycontent").html("<img src='images/loading.gif' style='width:24px;height:24px;'/>");
+		},
+		afterLoad:function(){
+			$(".mycontent").removeAttr("style");
+			$(".mycontent").empty();
+		},
+		loadMore:function(){
+			mypage.startLoad();
+			$.ajax({
+				type:'post',
+				url:'index/fetchMore.htm',
+				dataType:'json',
+				success:function(data){
+					var htm = '';
+					var htms = '';
+					for(var i=0; i<data.length; i++){
+						htm += '<div class="ui-grid-a"><div class="ui-block-a row-line"><span>'+data[i].name+'</span></div>';
+						htm += '<div class="ui-block-b row-line">';
+						htm += '<img src="images/play.png" width="20px"  class="play" onclick="javascript:mypage.play(\''+data[i].url+'\');">';
+						htm += '<img src="images/down.png" width="20px"  height="18px"></div></div>';
+						htms += htm;
+					}
+					$(".mycontent").append(html);
+					mypage.endLoad();
+				},
+				error:function(){
+					alert("加载失败");
+					mypage.endLoad();
+				}
+			});
+		},
+		startLoad:function(){
+			$("#load-more .end-load").css("display","none");
+			$("#load-more").append("<img class='start-load' src='images/loading.gif' style='width:24px;height:24px;'/>");
+		},
+		endLoad:function(){
+			$("#load-more .end-load").css("display","block");
+			$("#load-more .start-load").remove();
+		},
+		play:function(url){
+			$("#audio-wrap audio").remove();
+			$("#audio-wrap").append("<audio src='"+url+"' controls='controls' autoplay='autoplay'></audio>");
+		},
+		myPlaylist:new Array()
+	}
+	
+	function page2(){
+		$(".mycontent").remove();
+	}
+	
+	$(function(){
+		$(".page-now").click();
+		mypage.init();
+		$("#load-more").bind("click",function(){
+			mypage.loadMore($(this));	
+		});
+		$('.mycontent').ttwMusicPlayer(mypage.myPlaylist, {
+            autoPlay:false, 
+//             description:"descr",
+            jPlayer:{
+                swfPath:'../plugin/jquery-jplayer' //You need to override the default swf path any time the directory structure changes
+            }
+        });
+		
+	});
+	
+</script>
+</html>
