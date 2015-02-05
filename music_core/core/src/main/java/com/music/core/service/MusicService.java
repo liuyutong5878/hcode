@@ -14,7 +14,7 @@ public interface MusicService {
 	
 	int update(Music music);
 	
-	int batchUpdate();
+	int updateMusicLib();
 	
 	Music getById(Integer id);
 	
@@ -25,5 +25,9 @@ public interface MusicService {
 	PageObject<Music> listByPage(Integer pageNow);
 	
 	int del(String ids);
+	
+	MusicType getTypeById(Integer typeId);
+	
+	List<Music> getMusicsByTypeId(Integer typeId);
 	
 }

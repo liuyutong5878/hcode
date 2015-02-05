@@ -10,9 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.music.model.Music;
-import com.music.model.MusicType;
-import com.music.service.MusicService;
+import com.music.core.model.Music;
+import com.music.core.model.MusicType;
+import com.music.core.service.MusicService;
 
 @Controller
 @RequestMapping("/discovery")
@@ -20,9 +20,9 @@ public class DiscoveryController {
 
 	@Autowired
 	private MusicService musicService;
-	
+
 	@RequestMapping("/list")
-	public ModelAndView list(HttpServletRequest request, Model model){
+	public ModelAndView list(HttpServletRequest request, Model model) {
 		String type = request.getParameter("typeId");
 		MusicType musicType = musicService.getTypeById(Integer.parseInt(type));
 		model.addAttribute("type", musicType);
@@ -30,8 +30,5 @@ public class DiscoveryController {
 		model.addAttribute("musics", musics);
 		return new ModelAndView("music/music-list");
 	}
-	
-	
-	
-	
+
 }

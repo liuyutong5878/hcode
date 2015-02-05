@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
-import com.music.model.Music;
-import com.music.model.MusicType;
-import com.music.service.MusicService;
+import com.music.core.model.Music;
+import com.music.core.model.MusicType;
+import com.music.core.service.MusicService;
 
 @Controller
 @RequestMapping("/music")
@@ -28,29 +28,31 @@ public class MusicController {
 
 	@Autowired
 	private MusicService musicService;
-	
-	
+
 	@ResponseBody
-	@RequestMapping(value="/listTypes")
-	public String listTypes(HttpServletRequest request){
+	@RequestMapping(value = "/listTypes")
+	public String listTypes(HttpServletRequest request) {
 		List<MusicType> types = musicService.listAllTypes();
 		Gson gson = new Gson();
 		return gson.toJson(types);
 	}
-	
-	
+
 	/**
-	 * 音乐下载接口
+	 * 下载接口
+	 * 
 	 * @param musicId
 	 * @param response
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping("/{musicId}/download")
-	public void loadMusic(@PathVariable String musicId, HttpServletResponse response) throws UnsupportedEncodingException{
+	public void loadMusic(@PathVariable String musicId,
+			HttpServletResponse response) throws UnsupportedEncodingException {
 		Music music = musicService.getById(Integer.parseInt(musicId));
 		File file = new File(music.getUri());
 		System.out.println(file.getName());
-		response.addHeader("Content-Disposition", "attachment;filename=" + new String(file.getName().replace(" ","").getBytes("utf-8"),"ISO8859-1"));
+		response.addHeader("Content-Disposition", "attachment;filename="
+				+ new String(file.getName().replace(" ", "").getBytes("utf-8"),
+						"ISO8859-1"));
 		InputStream fis = null;
 		OutputStream ops = null;
 		response.setContentType("audio/mpeg");
@@ -59,20 +61,22 @@ public class MusicController {
 			ops = response.getOutputStream();
 			byte[] b = new byte[1024];
 			int i = 0;
-			while((i=fis.read(b)) > 0){
+			while ((i = fis.read(b)) > 0) {
 				ops.write(b, 0, i);
 			}
 			ops.flush();
-		}catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-		} finally{
+		} finally {
 			try {
-				if(fis!=null) fis.close();
-				if(ops!=null) ops.close();
+				if (fis != null)
+					fis.close();
+				if (ops != null)
+					ops.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	
+
 }

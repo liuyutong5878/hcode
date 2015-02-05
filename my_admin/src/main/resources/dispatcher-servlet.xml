@@ -11,7 +11,7 @@
            http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
 	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager"/>
-	<context:component-scan base-package="com.hlb.controller"></context:component-scan>
+	<context:component-scan base-package="com.music.controller"></context:component-scan>
 
 	
 	<!-- 配置映射媒体类型 --> 
@@ -40,7 +40,7 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**"/>
-			<bean class="com.hlb.interceptor.AccessPermissionInterceptor">
+			<bean class="com.music.interceptor.AccessPermissionInterceptor">
 				<property name="excludeUrls">
 					<list>
 						<value>/main/showLogin.htm</value>
