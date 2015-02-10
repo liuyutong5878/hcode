@@ -1,9 +1,11 @@
 package com.music.core.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.util.StringUtils;
 
 import com.music.core.model.PageObject;
 import com.music.core.model.Singer;
@@ -35,11 +37,27 @@ public abstract class CommonSingerServiceImpl implements SingerService{
 	}
 
 	@Override
-	public PageObject<Singer> listByPage(Integer pageNow) {
-		Integer totalCount = jdbc.queryForObject("select count(1) from t_singer",Integer.class);
-		PageObject<Singer> page = new PageObject<Singer>(totalCount);
-		String sql = "select * from t_singer limit ?,?";
-		List<Singer> singers = jdbc.query(sql, new Object[]{page.getPageSize()*(pageNow-1),page.getPageSize()}, new BeanPropertyRowMapper<Singer>(Singer.class));
+	public PageObject<Singer> listByPage(Singer condition,Integer pageNow) {
+		StringBuffer sql = new StringBuffer("select * from t_singer where 1=1 ");
+		List<Object> params = new ArrayList<>();
+		if(condition != null){
+			if(!StringUtils.isEmpty(condition.getName())){
+				sql.append("and `name` like ? ");
+				params.add("%"+condition.getName()+"%");
+			}
+		}
+		String countSql = sql.toString().replace("select * ", "select count(1) ");
+		Integer totalCount = jdbc.queryForObject(countSql,params.toArray(),Integer.class);
+		PageObject<Singer> page = new PageObject<Singer>(totalCount,pageNow);
+		sql.append(" limit ?,?");
+		params.add(page.getPageSize()*(pageNow-1));
+		params.add(page.getPageSize());
+		List<Singer> singers = null;
+		try {
+			singers = jdbc.query(sql.toString(), params.toArray(new Object[]{}), new BeanPropertyRowMapper<Singer>(Singer.class));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		page.setList(singers);
 		return page;
 	}
@@ -51,7 +69,7 @@ public abstract class CommonSingerServiceImpl implements SingerService{
 
 	@Override
 	public Singer getById(Integer id) {
-		List<Singer> singers = jdbc.query("select * from t_", new Object[]{id}, new BeanPropertyRowMapper<Singer>(Singer.class));
+		List<Singer> singers = jdbc.query("select * from t_singer where id = ? ", new Object[]{id}, new BeanPropertyRowMapper<Singer>(Singer.class));
 		if(singers != null && singers.size() > 0) return singers.get(0);
 		return null;
 	}
@@ -59,13 +77,18 @@ public abstract class CommonSingerServiceImpl implements SingerService{
 	
 	@Override
 	public Singer getUnknowSinger() {
-		List<Singer> singers = jdbc.query("select * from t_singer where `name` = ? ", new Object[]{"未知歌手"}, new BeanPropertyRowMapper<Singer>(Singer.class));
+		List<Singer> singers = jdbc.query("select * from t_singer where `name` like ? ", new Object[]{"未知%"}, new BeanPropertyRowMapper<Singer>(Singer.class));
 		if(singers != null && singers.size() > 0){
 			return singers.get(0);
 		}
 		return null;
 	}
 	
+	@Override
+	public int setHot(String singerIds) {
+		String sql = "update t_singer set isHot = 1 where id in(?)";
+		return jdbc.update(sql, singerIds);
+	}
+	
 	public abstract void setJdbc(JdbcTemplate jdbc);
-
 }

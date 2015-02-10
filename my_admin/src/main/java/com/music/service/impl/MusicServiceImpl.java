@@ -3,11 +3,14 @@ package com.music.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.chainsaw.Main;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
@@ -101,4 +104,13 @@ public class MusicServiceImpl extends CommonMusicServiceImpl{
 	public void setJdbc(JdbcTemplate jdbc) {
 		this.jdbc = jdbc;
 	}
+	
+	public static void main(String[] args) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date d = sdf.parse("2015-02-10");
+		
+		System.out.println(d);
+		System.out.println(d.getTime()); //1423533098175
+	}
+	
 }

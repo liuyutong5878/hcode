@@ -1,14 +1,18 @@
 package com.music.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+import com.music.core.model.PageObject;
 import com.music.model.User;
 import com.music.model.WebUser;
 import com.music.service.UserService;
@@ -42,22 +46,28 @@ public class UserController {
 		}
 	}
 	
-	@RequestMapping("/index")
-	public String index(){
-		return "/welcome";
-	}
-	
-	@RequestMapping("/userList")
-	public String userList(HttpServletRequest request, Model model){
-		List<WebUser> ulist = webUserService.getAll();
-		model.addAttribute("ulist", ulist);
-		return "/user/user_list";
-	}
-	
 	@RequestMapping("/logout")
 	public String logout(HttpServletRequest request){
 		request.getSession().removeAttribute(ConstantUtil.SESSION_USER);
 		return "redirect:/main/showLogin.htm";
 	}
 	
+	@RequestMapping("/index")
+	public String index(){
+		return "/welcome";
+	}
+	
+	@RequestMapping("/showUserList")
+	public String showUserList(){
+		
+		return "/user/user_list";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/userList")
+	public String userList(HttpServletRequest request){
+		String pageNow = request.getParameter("pageNow");
+		PageObject<WebUser> page = webUserService.listByPage(Integer.parseInt(pageNow));
+		return new Gson().toJson(page);
+	}
 }

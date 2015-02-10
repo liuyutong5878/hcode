@@ -17,11 +17,13 @@ public interface SingerService {
 	
 	List<Singer> getHotSingers();
 	
-	PageObject<Singer> listByPage(Integer pageNow);
+	PageObject<Singer> listByPage(Singer condition,Integer pageNow);
 	
 	List<Singer> listAll();
 	
 	Singer getById(Integer id);
 	
 	Singer getUnknowSinger();
+	
+	int setHot(String singerIds);
 }

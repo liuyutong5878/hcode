@@ -57,7 +57,8 @@ public class MusicController {
 	public String musicList(HttpServletRequest request, Model model){
 		String pageNow = request.getParameter("pageNow");
 		Gson gson = new Gson();
-		PageObject<Music> page = musicService.listByPage(Integer.parseInt(pageNow));
+		Music condition  = new Music();
+		PageObject<Music> page = musicService.listByPage(condition,Integer.parseInt(pageNow));
 		return gson.toJson(page);
 	}
 	

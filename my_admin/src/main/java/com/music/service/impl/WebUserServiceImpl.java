@@ -1,14 +1,13 @@
 package com.music.service.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import com.music.core.model.PageObject;
 import com.music.model.WebUser;
 import com.music.service.WebUserService;
 
@@ -46,27 +45,25 @@ public class WebUserServiceImpl implements WebUserService{
 	@Override
 	public List<WebUser> getListByCondition(WebUser entity) {
 		String sql = "select * from web_user";
-		List<WebUser> ulist = jdbc.query(sql, new WebUserRowMapper());
+		List<WebUser> ulist = jdbc.query(sql, new BeanPropertyRowMapper<WebUser>(WebUser.class));
 		return ulist;
 	}
 
 	@Override
 	public List<WebUser> getAll() {
 		String sql = "select * from web_user";
-		List<WebUser> ulist = jdbc.query(sql,new WebUserRowMapper());
+		List<WebUser> ulist = jdbc.query(sql, new BeanPropertyRowMapper<WebUser>(WebUser.class));
 		return ulist;
 	}
-	
-	private class WebUserRowMapper implements RowMapper<WebUser>{
-		@Override
-		public WebUser mapRow(ResultSet rs, int arg1) throws SQLException {
-			WebUser wbuser = new WebUser();
-			wbuser.setId(rs.getInt("id"));
-			wbuser.setUserName(rs.getString("userName"));
-			wbuser.setPassword(rs.getString("password"));
-			wbuser.setEmail(rs.getString("email"));
-			wbuser.setSex(rs.getInt("sex"));
-			return wbuser;
-		}
+
+	@Override
+	public PageObject<WebUser> listByPage(Integer pageNow) {
+		Integer totalCount = jdbc.queryForObject("select count(1) from web_user", Integer.class);
+		PageObject<WebUser> page = new PageObject<WebUser>(totalCount,pageNow);
+		String sql = "select * from web_user limit ?,?";
+		List<WebUser> webUserList = jdbc.query(sql, new Object[]{page.getPageSize()*(pageNow-1),page.getPageSize()},
+				new BeanPropertyRowMapper<WebUser>(WebUser.class));
+		page.setList(webUserList);
+		return page;
 	}
 }

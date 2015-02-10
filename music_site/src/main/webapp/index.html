@@ -42,10 +42,10 @@
 	    <h1> welcome home</h1>
 		<div data-role="navbar">
 	      <ul>
-	        <li class="page-now"><a href="#" data-icon="home">首页</a></li>
-	        <li><a href="/discovery.html" target="_self" data-icon="arrow-l">发现</a></li>
-			<li><a href="#" data-icon="arrow-r">歌手</a></li>
-	        <li><a href="#" data-icon="search">搜索</a></li>
+	        <li><a href="#" data-icon="home" class="ui-btn-active">首页</a></li>
+	        <li><a href="/discovery.html" target="_self"  data-icon="arrow-l">发现</a></li>
+			<li><a href="/singer.html" target="_self" data-icon="arrow-r">歌手</a></li>
+	        <li><a href="/search.html" target="_self" data-icon="search">搜索</a></li>
 	      </ul>
    		</div>
 	  </div>
@@ -99,20 +99,6 @@
 						}; 
 						mypage.myPlaylist.push(music);
 					}
-					//原始方式
-					/* var htm = '';
-					var htms = '';
-					for(var i=0; i<data.length; i++){
-						htm = '<div class="ui-grid-a">';
-						htm += '<div class="ui-block-a row-line"><span>'+decodeURI(data[i].name).replace(/[\+]+/g, " ")+'</span></div>';
-						htm += '<div class="ui-block-b row-line">';
-						htm += '<img src="images/play.png"  width="20px" class="play" onclick="javascript:mypage.play(\''+decodeURI(data[i].url).replace(/[\+]+/g, " ")+'\');">';
-						htm += '<img src="images/down.png"  width="20px" height="18px">';
-						htm += '</div></div>';
-						htms += htm;
-					}
-					$(".mycontent").empty();
-					$(".mycontent").append(htms); */
 				},
 				error:function(err){
 					alert("读取服务器失败");
@@ -173,7 +159,6 @@
 	}
 	
 	$(function(){
-		$(".page-now").click();
 		mypage.init();
 		$("#load-more").bind("click",function(){
 			mypage.loadMore($(this));	

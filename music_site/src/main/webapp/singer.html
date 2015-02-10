@@ -41,8 +41,8 @@
 		<div data-role="navbar">
 	      <ul>
 	        <li><a href="/" target="_self"  data-icon="home">首页</a></li>
-	        <li><a href="#" data-icon="arrow-l"  class="ui-btn-active">发现</a></li>
-			<li><a href="/singer.html" target="_self" data-icon="arrow-r">歌手</a></li>
+	        <li><a href="/discovery.html" target="_self" data-icon="arrow-l">发现</a></li>
+			<li><a href="#" data-icon="arrow-r" class="ui-btn-active">歌手</a></li>
 	        <li><a href="/search.html" target="_self" data-icon="search">搜索</a></li>
 	      </ul>
    		</div>
@@ -54,20 +54,20 @@
 </body>
 <script>
 	$(function(){
-		mtype.init();
+		singer.init();
 	});
 	
-	var mtype = {
+	var singer = {
 		init:function(){
 			$.ajax({
 				type:'post',
-				url:'/music/listTypes.htm',
+				url:'/singer/listHot.htm',
 				dataType:'json',
 				success:function(data){
 					var html = '';
 					for(var i=0; i<data.length;i++){
 						html += '<div class="row"><img src="/images/music-book.png"  width="50px" height="50px"/><span class="m_type">';
-						html += data[i].name + '</span><a style="color:#ccc;" target="_self" href="/discovery/list.htm?typeId='+data[i].id+'" class="jumpType">></a></div>';
+						html += data[i].name + '</span><a style="color:#ccc;" target="_self" href="/music/listBySinger.htm?singerId='+data[i].id+'" class="jumpType">></a></div>';
 					}
 					$(".mycontent").empty();
 					$(".mycontent").append(html);

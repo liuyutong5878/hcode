@@ -4,7 +4,7 @@ import java.util.List;
 
 public class PageObject<T> {
 
-	private Integer pageSize; //Ĭ��25��/ҳ
+	private Integer pageSize;
 	
 	private Integer pageNow;
 	
@@ -19,10 +19,11 @@ public class PageObject<T> {
 
 	}
 	
-	public PageObject(Integer total) {
+	public PageObject(Integer total, Integer pageNow) {
 		this.pageSize = 10;
 		this.pageCount = total%pageSize == 0 ? total/pageSize : total/pageSize + 1;
 		this.totalCount = total;
+		this.pageNow = pageNow;
 	}
 	
 	public Integer getPageSize() {

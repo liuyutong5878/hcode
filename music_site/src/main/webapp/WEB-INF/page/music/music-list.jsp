@@ -42,7 +42,7 @@
 	
 	$(function(){
 		$(".go-back").bind("click",function(){
-			window.location.href="/discovery.html";
+			window.location.href=history.go("-1");
 		});
 	});
 	

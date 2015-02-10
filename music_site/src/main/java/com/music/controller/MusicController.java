@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.Gson;
 import com.music.core.model.Music;
 import com.music.core.model.MusicType;
+import com.music.core.model.Singer;
 import com.music.core.service.MusicService;
+import com.music.core.service.SingerService;
 
 @Controller
 @RequestMapping("/music")
@@ -28,6 +31,9 @@ public class MusicController {
 
 	@Autowired
 	private MusicService musicService;
+	
+	@Autowired
+	private SingerService singerService;
 
 	@ResponseBody
 	@RequestMapping(value = "/listTypes")
@@ -37,6 +43,30 @@ public class MusicController {
 		return gson.toJson(types);
 	}
 
+	@RequestMapping("/listBySinger")
+	public String listBySinger(HttpServletRequest request, Model model){
+		String singerId = request.getParameter("singerId");
+		Singer singer = singerService.getById(Integer.parseInt(singerId));
+		model.addAttribute("type", singer);
+		List<Music> musics = musicService.getMusicBySingerId(Integer.parseInt(singerId));
+		model.addAttribute("musics", musics);
+		return "music/music-list";
+	}
+	
+	/**
+	 * 通过歌曲或歌手名关键字搜索
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/search")
+	public String search(HttpServletRequest request){
+		String name = request.getParameter("name");
+		
+		List<Music> musics = musicService.getMusicBySingerOrMusicName(name);
+		return new Gson().toJson(musics);
+	}
+	
 	/**
 	 * 下载接口
 	 * 

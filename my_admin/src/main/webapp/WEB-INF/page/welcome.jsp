@@ -6,7 +6,8 @@
 <title>首页</title>
 <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
-<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<!-- <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script> -->
+<script src="/js/jquery-1.8.2.min.js"></script>
 <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <style type="text/css">
 	.panel-primary{margin-left:20px;width: 260px;}
@@ -21,7 +22,7 @@
 
 <script type="text/javascript">
 	$(function(){
-
+		
 	});
 	
 	function addTab(title, url){
@@ -51,7 +52,8 @@
 			   	</h3>
 			   	</div>
 			   <ul class="list-group panel-collapse collapse in" id="collapseOne">
-			      <li class="list-group-item" ><a href="/main/userList.htm" target="rt_page">用户列表</a></li>
+			      <li class="list-group-item" ><a href="/main/showUserList.htm" target="rt_page">用户列表</a></li>
+			      <li class="list-group-item" ><a href="/singer/showList.htm" target="rt_page">singleList</a></li>
 			      <li class="list-group-item"><a href="javascript:addTab('控件','http://www.baidu.com')">权限列表</a></li>
 			   </ul>
 			</div>
@@ -85,7 +87,7 @@
 		</div>
 	  </div>
 	  <div class="col-xs-6 col-md-10">
-	  	<iframe name="rt_page" style="border:none;" width="100%;" height="1000px;"></iframe>
+	  	<iframe name="rt_page" id="pageFrame" style="border:none;" width="100%;" height="1000px;"></iframe>
 	  </div>
 	</div>
 <!-- 	<div class="tabWrap">

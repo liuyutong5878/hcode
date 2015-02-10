@@ -10,11 +10,12 @@
 <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="/js/mypage-nav.js"></script>
 </head>
 <body>
 	<button class="btn btn-primary upd-lib">更新类库</button>
 	<form id="query-form">
-		<input type="hidden" name="pageNow" id="pageNow" value="1"/>
+		<input type="hidden" name="pageNow" id="pageNow"/>
 	</form>
   	<div class="toolBar">
   		<label>
@@ -42,7 +43,7 @@
 	   <tbody id="tbody">
 	   </tbody>
 	</table>
-	<div class="pageNav pull-right" style="background-color:#ccc;width:360px;height:20px;text-align:center;">
+	<div class="pageNav">
 	</div>
 
 
@@ -144,7 +145,9 @@
 				}
 			});
 		},
-		query:function(){
+		query:function(pageNow){
+			if(!pageNow) pageNow = 1;
+			$("#pageNow").val(pageNow);
 			$.ajax({
 				type:'post',
 				url:'/music/list.htm',
@@ -154,8 +157,6 @@
 					$("#tbody").empty();
 					var htm = "";
 					var data = pageObj['list'];
-					var pageCount = pageObj['pageCount'];
-					var pageNo = pageObj['pageNow'];
 					for(var i=0; i<data.length;i++){
 						htm += "<tr><td><input type='checkbox' class='rowId' value='"+data[i].id+"'></td>";
 						htm += "<td>"+data[i].name+"</td><td>"+data[i].extension+"</td><td>"+data[i].time+"</td><td>"+data[i].singer+"</td>";
@@ -164,26 +165,9 @@
 						htm += "<a class='btn btn-default'>编辑</a><a href='javascript:mpg.del("+data[i].id+")' class='btn btn-default'>删除</a></td></tr>";
 					}
 					$("#tbody").append(htm);
-					$(".pageNav").empty();
-					$(".pageNav").append("共查询到" + pageObj['totalCount'] + "条记录&nbsp;&nbsp;");
-					$(".pageNav").append(pageNo+"/"+pageCount+"&nbsp;&nbsp;<a href='javascript:mpg.jumpPage("+(parseInt(pageNo)-1)+","+pageCount+")'>上一页</a>");
-					$(".pageNav").append("&nbsp;&nbsp;<a href='javascript:mpg.jumpPage("+(parseInt(pageNo)+1)+","+pageCount+")'>下一页</a>");
-					var pageSlk = "&nbsp;&nbsp;跳转到第<select onchange='javascript:mpg.jumpPage(this.value)'>";
-					for(var j=0; j<pageCount; j++){
-						if($("#pageNow").val() == (j+1)){
-							pageSlk += "<option value='"+(j+1)+"' selected='selected'>"+(j+1)+"</option>";
-						}else{
-							pageSlk += "<option value='"+(j+1)+"'>"+(j+1)+"</option>";
-						}
-					}
-					$(".pageNav").append(pageSlk+"</select>页");
+					$(".pageNav").pageNav(pageObj,mpg.query);
 				}
 			});
-		},
-		jumpPage:function(pageNow,pageCount){
-			if(pageNow <= 0 || pageNow > pageCount) return;
-			$("#pageNow").val(pageNow);
-			mpg.query();
 		},
 		validRowIds:function(){
 			var rowIds = [];

@@ -30,5 +30,4 @@ public class DiscoveryController {
 		model.addAttribute("musics", musics);
 		return new ModelAndView("music/music-list");
 	}
-
 }

@@ -2,7 +2,7 @@ package com.music.core.model;
 
 /**
  *@author hlib
- *@version 1.0 : 2015��2��3������8:39:47
+ *@version 1.0 
  */
 
 public class Singer {

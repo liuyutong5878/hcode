@@ -22,12 +22,16 @@ public interface MusicService {
 	
 	int addToType(String musicIds,Integer typeId);
 	
-	PageObject<Music> listByPage(Integer pageNow);
+	PageObject<Music> listByPage(Music condition, Integer pageNow);
 	
 	int del(String ids);
 	
 	MusicType getTypeById(Integer typeId);
 	
 	List<Music> getMusicsByTypeId(Integer typeId);
+	
+	List<Music> getMusicBySingerId(Integer singerId);
+	
+	List<Music> getMusicBySingerOrMusicName(String name);
 	
 }
