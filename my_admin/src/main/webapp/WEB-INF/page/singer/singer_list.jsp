@@ -33,6 +33,7 @@
 	         <th>所属地区</th>
 	         <th>简介</th>
 	         <th>是否置顶</th>
+	         <th>操作</th>
 	      </tr>
 	   </thead>
 	   <tbody id="tbody">
@@ -71,8 +72,8 @@
 					for(var i=0; i<data.length;i++){
 						htm += "<tr><td>"+data[i].name+"</td><td>"+data[i].englishName+"</td><td>"+data[i].sex+"</td>";
 						htm += "<td>"+data[i].stype+"</td><td>"+data[i].country+"</td><td>"+data[i].district+"</td><td>"+data[i].profile+"</td>";
-						htm += "<td>"+data[i].isHot+"</td><td><a class='btn btn-default' href='#'>编辑</a></td>";
-						htm += "<td><a class='btn btn-default' onclick='singers.setHot("+data[i].id+")'>置顶</a></td></tr>";
+						htm += "<td>"+data[i].isHot+"</td><td><a class='btn btn-default' href=''>编辑</a>";
+						htm += "<a class='btn btn-default' onclick='singers.setHot("+data[i].id+")'>置顶</a></td></tr>";
 					}
 					$("#tbody").html(htm);
 					$(".pageNav").pageNav(pageObj,singers.query);

@@ -24,6 +24,7 @@ import com.music.core.model.MusicType;
 import com.music.core.model.Singer;
 import com.music.core.service.MusicService;
 import com.music.core.service.SingerService;
+import com.music.util.SystemUtil;
 
 @Controller
 @RequestMapping("/music")
@@ -78,8 +79,8 @@ public class MusicController {
 	public void loadMusic(@PathVariable String musicId,
 			HttpServletResponse response) throws UnsupportedEncodingException {
 		Music music = musicService.getById(Integer.parseInt(musicId));
-		File file = new File(music.getUri());
-		System.out.println(file.getName());
+		String filePath = SystemUtil.getProp("musicPath") + music.getUri();
+		File file = new File(filePath);
 		response.addHeader("Content-Disposition", "attachment;filename="
 				+ new String(file.getName().replace(" ", "").getBytes("utf-8"),
 						"ISO8859-1"));
@@ -107,6 +108,9 @@ public class MusicController {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public static void main(String[] args) {
 	}
 
 }

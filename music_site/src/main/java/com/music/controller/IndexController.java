@@ -43,7 +43,8 @@ public class IndexController {
 	@ResponseBody
 	@RequestMapping(value = "/init")
 	public String indexInit(HttpServletRequest request) {
-		List<Music> list = musicService.listAll();
+		
+		List<Music> list = musicService.listIndexMusic(null);
 		Gson gson = new Gson();
 		System.out.println("user device----" + request.getHeader("USER-AGENT"));
 		return gson.toJson(list);

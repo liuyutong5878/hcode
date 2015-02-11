@@ -18,6 +18,9 @@ public class Music {
 	private String downloadUrl;
 	
 	private String addTime;
+	
+	/**是否置于首页*/
+	private Integer isIndex;
 
 	public Integer getId() {
 		return id;
@@ -81,6 +84,14 @@ public class Music {
 
 	public void setAddTime(String addTime) {
 		this.addTime = addTime;
+	}
+
+	public Integer getIsIndex() {
+		return isIndex;
+	}
+
+	public void setIsIndex(Integer isIndex) {
+		this.isIndex = isIndex;
 	}
 	
 }

@@ -9,10 +9,10 @@
 <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
 <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/demo.css">
-<link href="http://m.kugou.com/v2/static/css/style.css?20130320" rel="stylesheet" type="text/css"/>
 
 <style>
 	.m-row{height:30px;width:100%;margin:5px 0 5px 0;line-height:30px;border-bottom:#5F5757 1px solid;font-size:12px;font-family:KaiTi;}
+	.result-list a{text-decoration:none;}
 </style>
 </head>
 <body>
@@ -54,6 +54,7 @@
 	
 	var music = {
 		serach:function(){
+			if(!music.validateForm()) return;
 			$.ajax({
 				type:'post',
 				url:'/music/search.htm',
@@ -61,13 +62,30 @@
 				dataType:'json',
 				success:function(data){
 					var rows = '';
-					for(var i=0; i<data.length;i++){
-						rows += '<div class="m-row">'+data[i].singer+'-' + data[i].name +'<span style="float:right;"><img style="position:relative;top:7px;margin-right:10px;" src="/images/play.png" width="20px" height="20px"/><a href="'+data[i].downloadUrl+'" target="_self">下载</a></span></div>';
+					if(data != null && data.length > 0){
+						for(var i=0; i<data.length;i++){
+							rows += '<div class="m-row">'+data[i].singer+'-' + data[i].name +'<span style="float:right;">';
+							rows += '<img style="position:relative;top:7px;margin-right:10px;" src="/images/play.png" width="20px" height="20px"/>';
+							rows += '<a href="'+data[i].downloadUrl+'" target="_self">下载</a></span></div>';
+						}
+					}else{
+						rows = '<div class="m-row">未查询到相关数据</div>';
 					}
 					$(".result-list").empty();
 					$(".result-list").append(rows);
+				},
+				error:function(){
+					alert("与服务器通讯错误");	
 				}
 			});
+		},
+		validateForm:function(){
+			if(!$("#search").val()){
+				alert("请输入搜索内容！");
+				return false;
+			}else{
+				return true;
+			}
 		}
 	};
 	

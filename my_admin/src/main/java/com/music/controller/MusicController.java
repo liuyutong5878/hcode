@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,8 +57,14 @@ public class MusicController {
 	@RequestMapping("/list")
 	public String musicList(HttpServletRequest request, Model model){
 		String pageNow = request.getParameter("pageNow");
+		String name = request.getParameter("name");
+		String isIndex = request.getParameter("isIndex");
 		Gson gson = new Gson();
 		Music condition  = new Music();
+		condition.setName(name);
+		if(StringUtils.isNotBlank(isIndex)){
+			condition.setIsIndex(Integer.parseInt(isIndex));
+		}
 		PageObject<Music> page = musicService.listByPage(condition,Integer.parseInt(pageNow));
 		return gson.toJson(page);
 	}
@@ -70,4 +77,11 @@ public class MusicController {
 		return gson.toJson("已成功删除" + rows + "条记录！");
 	}
 	
+	@ResponseBody
+	@RequestMapping("/{ids}/setIndex")
+	public String setIndex(@PathVariable String ids,HttpServletRequest request){
+		boolean b = musicService.addToIndex(ids);
+		if(b) return "success";
+		return "failed";
+	}
 }

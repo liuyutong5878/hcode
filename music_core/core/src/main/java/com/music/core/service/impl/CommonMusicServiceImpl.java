@@ -1,11 +1,16 @@
 package com.music.core.service.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.util.StringUtils;
 
 import com.music.core.model.Music;
 import com.music.core.model.MusicType;
@@ -18,12 +23,12 @@ public abstract class CommonMusicServiceImpl implements MusicService{
 	
 	protected JdbcTemplate jdbc;
 	
+	private static final String SQL_MUSIC  = "SELECT tm.id,ifnull(tm.isIndex,0) isIndex,tm.name,ts.name singer,tm.time,tm.uri,tm.extension,tm.downloadUrl,"
+			+ "tm.addTime,tm.language FROM t_music tm LEFT JOIN t_singer ts ON(ts.id = tm.`singerId`) where 1 = 1 ";
+	
 	@Override
 	public List<Music> listAll() {
-		
-		String sql = "select tm.id,tm.name,ts.name as singer,tm.time,tm.uri,tm.extension,tm.downloadUrl,tm.addTime from t_music tm left join t_singer ts on(tm.singerId=ts.id)";
-		List<Music> musics = jdbc.query(sql, new BeanPropertyRowMapper<>(Music.class));
-		
+		List<Music> musics = jdbc.query(SQL_MUSIC, new BeanPropertyRowMapper<>(Music.class));
 		return musics;
 	}
 
@@ -40,8 +45,8 @@ public abstract class CommonMusicServiceImpl implements MusicService{
 
 	@Override
 	public Music getById(Integer id) {
-		String sql = "select tm.id,tm.name,ts.name as singer,tm.time,tm.uri,tm.extension,tm.downloadUrl,tm.addTime from t_music tm left join t_singer ts on(tm.singerId=ts.id) where tm.id = ?";
-		Music music = jdbc.queryForObject(sql, new Object[]{id}, new BeanPropertyRowMapper<Music>(Music.class));
+		String where = " and tm.id = ? ";
+		Music music = jdbc.queryForObject(SQL_MUSIC + where, new Object[]{id}, new BeanPropertyRowMapper<Music>(Music.class));
 		return music;
 	}
 
@@ -65,10 +70,32 @@ public abstract class CommonMusicServiceImpl implements MusicService{
 
 	@Override
 	public PageObject<Music> listByPage(Music condition, Integer pageNow) {
-		int totalCount = jdbc.queryForObject("select count(1) from t_music", Integer.class);
+		StringBuffer where = new StringBuffer();
+		List<Object> params = new ArrayList<>();
+		if(condition != null){
+			if(!StringUtils.isEmpty(condition.getName())){
+				where.append(" and tm.`name` LIKE ? OR ts.`name` LIKE ? ");
+				params.add("%"+condition.getName()+"%");
+				params.add("%"+condition.getName()+"%");
+			}
+			if(condition.getIsIndex() != null){
+				where.append(" and tm.isIndex = ? ");
+				params.add(condition.getIsIndex()+"");
+			}
+		}
+		int totalCount = jdbc.query(SQL_MUSIC.replaceAll("SELECT.*FROM", "SELECT COUNT(1) FROM ") + where, params.toArray(), new ResultSetExtractor<Integer>(){
+			@Override
+			public Integer extractData(ResultSet rs) throws SQLException,DataAccessException {
+				if(rs.next()){
+					return rs.getInt(1);
+				}
+				return null;
+			}});
 		PageObject<Music> page = new PageObject<Music>(totalCount,pageNow);
-		String sql = "select tm.id,tm.name,ts.name as singer,tm.time,tm.uri,tm.extension,tm.downloadUrl,tm.addTime from t_music tm left join t_singer ts on(tm.singerId=ts.id) limit ?,?";
-		List<Music> musics = jdbc.query(sql, new Object[]{page.getPageSize()*(pageNow-1),page.getPageSize()}, new BeanPropertyRowMapper<>(Music.class));
+		String limit = " limit ?,? ";
+		params.add(page.getPageSize()*(pageNow-1));
+		params.add(page.getPageSize());
+		List<Music> musics = jdbc.query(SQL_MUSIC + where + limit, params.toArray(), new BeanPropertyRowMapper<>(Music.class));
 		page.setList(musics);
 		return page;
 	}
@@ -85,9 +112,9 @@ public abstract class CommonMusicServiceImpl implements MusicService{
 
 	@Override
 	public List<Music> getMusicsByTypeId(Integer typeId) {
-		String sql = "SELECT tm.id,tm.name,ts.name singer,tm.time,tm.uri,tm.extension,tm.downloadUrl,tm.addTime,tm.language "
-				+ " FROM t_music tm JOIN t_music_type tt ON(tt.`musicId`=tm.`id`) LEFT JOIN t_singer ts ON(ts.id = tm.`singerId`) WHERE tt.`typeId` = ?";
-		return jdbc.query(sql, new Object[]{typeId}, new BeanPropertyRowMapper<Music>(Music.class));
+		String sql = SQL_MUSIC.replace(" where 1 = 1", "") + " JOIN t_music_type tt ON(tt.`musicId`=tm.`id`) ";
+		String where = " and tt.`typeId` = ? ";
+		return jdbc.query(sql + where, new Object[]{typeId}, new BeanPropertyRowMapper<Music>(Music.class));
 	}
 
 	@Override
@@ -97,17 +124,33 @@ public abstract class CommonMusicServiceImpl implements MusicService{
 
 	@Override
 	public List<Music> getMusicBySingerId(Integer singerId) {
-		String sql = "SELECT tm.id,tm.name,ts.name singer,tm.time,tm.uri,tm.extension,tm.downloadUrl,tm.addTime,tm.language "
-				+ " FROM t_music tm LEFT JOIN t_singer ts ON(ts.id = tm.`singerId`) WHERE ts.id = ?";
-		return jdbc.query(sql, new Object[]{singerId}, new BeanPropertyRowMapper<Music>(Music.class));
+		String where = " and ts.id = ? ";
+		return jdbc.query(SQL_MUSIC + where, new Object[]{singerId}, new BeanPropertyRowMapper<Music>(Music.class));
 	}
 	
 	@Override
 	public List<Music> getMusicBySingerOrMusicName(String name) {
-		String sql = "SELECT tm.id,tm.`name`,tm.`time`,tm.`uri`,tm.`extension`,tm.`downloadUrl`,tm.`addTime`,tm.`language`,ts.name singer "
-				+ " FROM t_music tm LEFT JOIN t_singer ts ON(tm.`singerId` = ts.`id`) WHERE tm.`name` LIKE ? OR ts.`name` LIKE ? ";
-		List<Music> musics = jdbc.query(sql, new Object[]{"%"+name+"%","%"+name+"%"}, new BeanPropertyRowMapper<Music>(Music.class));
+		String where = " and tm.`name` LIKE ? OR ts.`name` LIKE ? ";
+		List<Music> musics = jdbc.query(SQL_MUSIC + where, new Object[]{"%"+name+"%","%"+name+"%"}, new BeanPropertyRowMapper<Music>(Music.class));
 		return musics;
+	}
+	
+	@Override
+	public List<Music> listIndexMusic(Integer num) {
+		String where = " and isIndex = 1 ";
+		if(num != null && num > 0){
+			where += " limit " + num;
+		}
+		List<Music> musics = jdbc.query(SQL_MUSIC + where, new BeanPropertyRowMapper<Music>(Music.class));
+		return musics;
+	}
+	
+	@Override
+	public boolean addToIndex(String ids) {
+		String sql = "update t_music set isIndex = 1 where id in ( ? )";
+		int row = jdbc.update(sql, ids);
+		if(row > 0) return true;
+		return false;
 	}
 	
 	public abstract void setJdbc(JdbcTemplate jdbc);

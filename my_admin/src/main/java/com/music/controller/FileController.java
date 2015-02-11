@@ -78,13 +78,9 @@ public class FileController {
 	@ResponseBody
 	@RequestMapping(value="/updateMusicLib")
 	public String updateMusicLib(HttpServletRequest request){
-		List<Music> musics = musicService.listAll();
-		File file = new File("E:/audio_lib");
 		int rows = 0;
 		Gson gson = new Gson();
-		if(file.list().length != musics.size()){
-			rows = musicService.updateMusicLib();
-		}
+		rows = musicService.updateMusicLib();
 		return gson.toJson("成功更新" + rows + "条记录！"); 
 	}
 	

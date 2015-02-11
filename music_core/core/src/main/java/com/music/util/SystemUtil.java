@@ -1,7 +1,10 @@
-package com.music.utils;
+package com.music.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 import java.util.Random;
 
 public class SystemUtil {
@@ -28,13 +31,34 @@ public class SystemUtil {
 		return dstr;
 	}
 	
+	/**
+	 * @param key
+	 * @return
+	 */
+	public static String getProp(String key){
+		String val = "";
+		InputStream in = null;
+		try {
+			in = SystemUtil.class.getClassLoader().getResourceAsStream("keys.properties");
+			System.out.println();
+			Properties prop = new Properties();
+			prop.load(in);
+			val = (String) prop.get(key);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally{
+			try {
+				if(in != null) in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return val;
+	}
 	
 	
 	public static void main(String[] args) {
-		/*for(int i=0; i<50; i++){
-			System.out.println(getRandomStr(5));
-		}*/
-		String s = getDateTimeStr(new Date(), "yyyy-MM-dd HH:mm:ss");
+		String s = getProp("musicPath");
 		System.out.println(s);
 	}
 	

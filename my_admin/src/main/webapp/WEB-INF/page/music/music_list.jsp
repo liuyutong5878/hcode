@@ -11,11 +11,14 @@
 <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="/js/mypage-nav.js"></script>
+<script src="/js/sys-ui.js"></script>
 </head>
 <body>
 	<button class="btn btn-primary upd-lib">更新类库</button>
 	<form id="query-form">
 		<input type="hidden" name="pageNow" id="pageNow"/>
+		<input type="text" name="name" placeHolder="请输入歌曲或歌手名"/>
+		<a class="btn btn-default" onclick="javascript:mpg.query()">查询</a>
 	</form>
   	<div class="toolBar">
   		<label>
@@ -37,6 +40,7 @@
 	         <th>相对路径</th>
 	         <th>下载地址</th>
 	         <th>添加时间</th>
+	         <th>是否在首页</th>
 	         <th>操作</th>
 	      </tr>
 	   </thead>
@@ -74,12 +78,12 @@
          </div>
       </div><!-- /.modal-content -->
 </div><!-- /.modal -->
-
 </body>
 <script type="text/javascript">
 	
 	$(function(){
 		$(".upd-lib").bind("click",function(){
+			UI.waitWinOpen();
 			$.ajax({
 				type:'post',
 				url:'/file/updateMusicLib.htm',
@@ -87,9 +91,11 @@
 				success:function(data){
 					alert(data);
 					mpg.query();
+					UI.waitWinClose();
 				},
 				error:function(err){
 					alert("服务器内部错误");
+					UI.waitWinClose();
 				}
 			});
 		});
@@ -146,6 +152,7 @@
 			});
 		},
 		query:function(pageNow){
+			UI.waitWinOpen();
 			if(!pageNow) pageNow = 1;
 			$("#pageNow").val(pageNow);
 			$.ajax({
@@ -160,12 +167,14 @@
 					for(var i=0; i<data.length;i++){
 						htm += "<tr><td><input type='checkbox' class='rowId' value='"+data[i].id+"'></td>";
 						htm += "<td>"+data[i].name+"</td><td>"+data[i].extension+"</td><td>"+data[i].time+"</td><td>"+data[i].singer+"</td>";
-						htm += "<td>"+data[i].uri+"</td><td>"+data[i].downloadUrl+"</td><td>"+data[i].addTime+"</td>";
+						htm += "<td>"+data[i].uri+"</td><td>"+data[i].downloadUrl+"</td><td>"+data[i].addTime+"</td><td>"+(data[i] && data[i].isIndex==1 ? '是' : '') +"</td>";
 						htm += "<td><a class='btn btn-default addToType' data-toggle='modal' data-target='#myModal' musicName='"+data[i].name+"' rowId='"+data[i].id+"'>添加到类别</a>";
+						htm += "<a class='btn btn-default' onclick='javascript:mpg.setIndex("+data[i].id+")'>置顶</a>";
 						htm += "<a class='btn btn-default'>编辑</a><a href='javascript:mpg.del("+data[i].id+")' class='btn btn-default'>删除</a></td></tr>";
 					}
 					$("#tbody").append(htm);
 					$(".pageNav").pageNav(pageObj,mpg.query);
+					UI.waitWinClose();
 				}
 			});
 		},
@@ -201,12 +210,29 @@
 				}
 			});
 		},
-		batchAddToType:function(){
+		batchAddToType:function(){	//显示添加到类别弹出窗
 			var rowIds = mpg.validRowIds();
 			if(rowIds){
 				$("#musicId").val(rowIds);
 				$("#myModal").modal();
 			}
+		},
+		setIndex:function(id){
+			if(!confirm("确认要将该曲目置顶吗？")) return;
+			$.ajax({
+				type:'post',
+				url:'/music/' + id + "/setIndex.htm",
+				success:function(data){
+					if(data == "success"){
+						alert("操作成功");
+					}else{
+						alert("操作失败");
+					}
+				},
+				error:function(){
+					alert("服务器内部出错");	
+				}
+			});
 		}
 	}
 	

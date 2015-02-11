@@ -3,14 +3,11 @@ package com.music.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.chainsaw.Main;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
@@ -22,11 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.music.utils.SystemUtil;
 import com.music.core.model.Music;
 import com.music.core.model.Singer;
 import com.music.core.service.SingerService;
 import com.music.core.service.impl.CommonMusicServiceImpl;
+import com.music.util.SystemUtil;
 
 @Service
 public class MusicServiceImpl extends CommonMusicServiceImpl{
@@ -38,7 +35,8 @@ public class MusicServiceImpl extends CommonMusicServiceImpl{
 
 	@Override
 	public int updateMusicLib() {
-		File file = new File("E:/audio_lib");
+		String musicPath = SystemUtil.getProp("musicPath");
+		File file = new File(musicPath);
 		String sql = "";
 		List<String> sqls = new ArrayList<>();
 		String fname = "";
@@ -51,6 +49,7 @@ public class MusicServiceImpl extends CommonMusicServiceImpl{
 		if(unknowSinger == null) return 0;
 		Singer singer = null;
 		for(File f : file.listFiles()){
+			if(f.isDirectory()) continue;
 			fname = f.getName().replace("`", "\\`").replace("'", "\'");
 			try {
 				mp3 = (MP3File) AudioFileIO.read(f);
@@ -71,7 +70,7 @@ public class MusicServiceImpl extends CommonMusicServiceImpl{
 			singer = singerService.getByName(singerName);
 			if(singer == null) singer = unknowSinger;
 			sql = "insert ignore into t_music(name,singerId,time,uri,extension,downloadUrl,`addTime`) values(replace(\""+fname.substring(fname.indexOf("-")+1, fname.lastIndexOf("."))+"\",\"'\",\"''\"),"
-				 + "'" + singer.getId() + "','" + time + "',replace(\""+f.getPath().replace("\\", "\\\\")+"\",\"'\",\"''\"),'" 
+				 + "'" + singer.getId() + "','" + time + "','\\\\"+f.getName().replace("'", "")+"','" 
 				 + fname.substring(fname.lastIndexOf(".")+1) + "',replace(\""+f.getAbsolutePath().replace("\\", "\\\\")+"\",\"'\",\"''\"),'"+ addTime + "')";
 			sqls.add(sql);
 		}
@@ -104,13 +103,4 @@ public class MusicServiceImpl extends CommonMusicServiceImpl{
 	public void setJdbc(JdbcTemplate jdbc) {
 		this.jdbc = jdbc;
 	}
-	
-	public static void main(String[] args) throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date d = sdf.parse("2015-02-10");
-		
-		System.out.println(d);
-		System.out.println(d.getTime()); //1423533098175
-	}
-	
 }

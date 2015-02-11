@@ -34,4 +34,7 @@ public interface MusicService {
 	
 	List<Music> getMusicBySingerOrMusicName(String name);
 	
+	List<Music> listIndexMusic(Integer num);
+	
+	boolean addToIndex(String ids);
 }
