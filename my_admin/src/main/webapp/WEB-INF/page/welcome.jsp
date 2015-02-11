@@ -1,23 +1,16 @@
-<%@ page language="java" contentType="text/html; UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page pageEncoding="utf-8"%>
+<%@ include file="/common/taglib.jsp" %>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>首页</title>
-<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
-<!-- <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script> -->
-<script src="/js/jquery-1.8.2.min.js"></script>
-<script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<%@ include file="/common/header.jsp" %>
 <style type="text/css">
 	.panel-primary{margin-left:20px;width: 260px;}
 	#accordion{margin-right:5px; float:left;}
 	.tabWrap{position:absolute;left:240px;top:63px;}
-	
-/* 	.container{margin-left:0px;margin-right: 0px;width: 1800px;} */
-	
 	.hlb_container{background-color:green;width:1000px;height:100%;}
-	
 </style>
 
 <script type="text/javascript">
@@ -36,7 +29,7 @@
 <body>
 	<div class="panel panel-default" >
 		<div class="panel-heading" style="height:40px;">
-			您好！${sessionScope.user.userName}欢迎登陆 || 
+			你好！${sessionScope.user.userName}欢迎登陆 || 
 			<a href="/main/logout.htm">退出</a>
 			<embed style="width:80px;height:30px;" class="pull-right" src="http://chabudai.sakura.ne.jp/blogparts/honehoneclock/honehone_clock_wh.swf"/>
 		</div>

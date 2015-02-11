@@ -1,7 +1,10 @@
 package com.music.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -62,5 +65,32 @@ public class IndexController {
 		System.out.println("加载更多////////////");
 		return "";
 	}
+	
+	public static void main(String[] args) {
+		
+		int[] arr = {2,1,6,8,9};
+		
+		for(int a : arr){
+			System.out.println(a);
+		}
+		
+		int max = 0;
+		for(int i=0; i<arr.length; i++){
+			max = arr[i]; 
+			if((i+1) < arr.length){
+				if(arr[i] < arr[i+1]){
+					max = arr[i+1];
+					arr[i+1] = arr[i];
+					arr[i] = max;
+				}
+			}
+		}
+		System.out.println("===============");
+		for(int a : arr){
+			System.out.println(a);
+		}
+	}
+	
+	
 
 }
