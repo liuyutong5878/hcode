@@ -17,9 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.google.gson.Gson;
-import com.music.model.Attachment;
-import com.music.service.AttachmentService;
-import com.music.core.model.Music;
+import com.music.core.model.Attachment;
+import com.music.core.service.AttachmentService;
 import com.music.core.service.MusicService;
 
 @Controller

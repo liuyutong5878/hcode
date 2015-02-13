@@ -15,4 +15,6 @@ public interface CommonService<T> {
 	List<T> getListByCondition(T entity);
 	
 	List<T> getAll();
+	
+	T addByReturnKey(T entity);
 }

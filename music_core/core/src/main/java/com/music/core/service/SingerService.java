@@ -2,6 +2,9 @@ package com.music.core.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
+import com.music.core.model.Attachment;
 import com.music.core.model.PageObject;
 import com.music.core.model.Singer;
 
@@ -26,4 +29,10 @@ public interface SingerService {
 	Singer getUnknowSinger();
 	
 	int setHot(String singerIds);
+	
+	Singer saveSinger(Singer singer);
+	
+	Singer update(Singer singer);
+	
+	void loadIcon(Attachment attachment, HttpServletResponse response);
 }

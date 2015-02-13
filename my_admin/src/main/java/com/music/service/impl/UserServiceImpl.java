@@ -74,4 +74,10 @@ public class UserServiceImpl implements UserService{
 	public List<User> getAll() {
 		return null;
 	}
+
+	@Override
+	public User addByReturnKey(User entity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

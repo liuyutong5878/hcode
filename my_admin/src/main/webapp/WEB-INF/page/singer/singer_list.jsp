@@ -16,7 +16,6 @@
 		</form>
 	</div>
 	<table class="table table-bordered">
-<%-- 	   <caption>用户列表</caption> --%>
 	   <thead>
 	      <tr>
 	         <th>名字</th>
@@ -66,7 +65,7 @@
 					for(var i=0; i<data.length;i++){
 						htm += "<tr><td>"+data[i].name+"</td><td>"+data[i].englishName+"</td><td>"+data[i].sex+"</td>";
 						htm += "<td>"+data[i].stype+"</td><td>"+data[i].country+"</td><td>"+data[i].district+"</td><td>"+data[i].profile+"</td>";
-						htm += "<td>"+data[i].isHot+"</td><td><a class='btn btn-default' href=''>编辑</a>";
+						htm += "<td>"+data[i].isHot+"</td><td><a class='btn btn-default' href='/singer/"+data[i].id+"/edit.htm'>编辑</a>";
 						htm += "<a class='btn btn-default' onclick='singers.setHot("+data[i].id+")'>置顶</a></td></tr>";
 					}
 					$("#tbody").html(htm);

@@ -66,4 +66,10 @@ public class WebUserServiceImpl implements WebUserService{
 		page.setList(webUserList);
 		return page;
 	}
+
+	@Override
+	public WebUser addByReturnKey(WebUser entity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

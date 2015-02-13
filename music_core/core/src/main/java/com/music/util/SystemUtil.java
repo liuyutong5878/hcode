@@ -2,6 +2,7 @@ package com.music.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
@@ -9,6 +10,17 @@ import java.util.Random;
 
 public class SystemUtil {
 
+	public static Date getDateByString(String source,String pattern){
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		Date date = null;
+		try {
+			date = sdf.parse(source);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date;
+	}
+	
 	public static String getRandomStr(int length){
 		String chars = "qwertyuiopasdfghjklzxcvbnm1234567890";
 		StringBuffer sb = new StringBuffer();
@@ -26,7 +38,7 @@ public class SystemUtil {
 		try {
 			dstr = sdf.format(date);
 		} catch (Exception e) {
-
+			
 		}
 		return dstr;
 	}
@@ -58,8 +70,9 @@ public class SystemUtil {
 	
 	
 	public static void main(String[] args) {
-		String s = getProp("musicPath");
-		System.out.println(s);
+
+		Date date = getDateByString("2015-02-13 16:10:57", "yyyy-MM-dd HH:mm:ss");
+		System.out.println(SystemUtil.getDateTimeStr(date, "yyyyMMdd"));
 	}
 	
 }

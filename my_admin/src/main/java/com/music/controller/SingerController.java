@@ -1,17 +1,35 @@
 package com.music.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.google.gson.Gson;
+import com.music.core.model.Attachment;
+import com.music.core.model.Country;
 import com.music.core.model.PageObject;
 import com.music.core.model.Singer;
+import com.music.core.service.AttachmentService;
+import com.music.core.service.CountryService;
 import com.music.core.service.SingerService;
+import com.music.util.SystemUtil;
 
 /**
  *@author hlib
@@ -24,6 +42,12 @@ public class SingerController {
 
 	@Autowired
 	private SingerService singerService;
+	
+	@Autowired
+	private CountryService countryService;
+	
+	@Autowired
+	private AttachmentService attachService;
 	
 	private Gson gson = new Gson();
 	
@@ -49,5 +73,66 @@ public class SingerController {
 	public String setHot(@PathVariable String ids){
 		int rows = singerService.setHot(ids);
 		return gson.toJson("成功更新" + rows + "条记录");
+	}
+	
+	@RequestMapping("/{id}/edit")
+	public String editSinger(@PathVariable Integer id,Model model){
+		Singer singer = singerService.getById(id);
+		model.addAttribute("singer", singer);
+		List<Country> countrys = countryService.getAll();
+		model.addAttribute("countrys", countrys);
+		return "/singer/singer_edit";
+	}
+	
+	@RequestMapping("/{id}/loadIcon")
+	public void loadIcon(@PathVariable Integer id, HttpServletResponse response){
+		response.setContentType("image/jpeg");
+		Attachment attach = attachService.getById(id);
+		singerService.loadIcon(attach, response);
+	}
+	
+	@RequestMapping("/save")
+	public String saveSinger(Singer singer, HttpServletRequest request){
+		
+		MultipartHttpServletRequest req = (MultipartHttpServletRequest) request;
+		String path = SystemUtil.getProp("uploadPath") + File.separator + SystemUtil.getDateTimeStr(new Date(), "yyyyMMdd")+File.separator;
+		String saveFileName = UUID.randomUUID().toString();
+		MultipartFile source = req.getFile("file");
+		
+		Attachment returnAttach = null;
+		if(!source.isEmpty()){
+			File dest = new File(path+saveFileName);
+			//保存文件到本地
+			try {
+				FileUtils.copyInputStreamToFile(source.getInputStream(), dest);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			Attachment attach = new Attachment();
+			attach.setAddTime(SystemUtil.getDateTimeStr(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			attach.setDownloadAble(false);
+			attach.setDownloadUrl("");
+			attach.setFileName(source.getOriginalFilename());
+			attach.setFileSize(source.getSize());
+			attach.setUid(saveFileName);
+			attach.setUri("");
+			attach.setType(1);
+			returnAttach = attachService.addByReturnKey(attach);
+		}
+		Singer rtSinger = null;
+		if(singer != null){
+			try {
+				singer.setName(new String(singer.getName().getBytes("ISO8859-1"),"UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			if(returnAttach != null) singer.setIconId(returnAttach.getId()); //保存头像id
+			if(singer.getId() != null){
+				rtSinger = singerService.update(singer);	//更新
+			}else{
+				rtSinger = singerService.saveSinger(singer);//新增
+			}
+		}
+		return "redirect:/singer/"+rtSinger.getId()+"/edit.htm";
 	}
 }

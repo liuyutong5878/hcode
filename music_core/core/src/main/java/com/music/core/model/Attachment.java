@@ -1,4 +1,4 @@
-package com.music.model;
+package com.music.core.model;
 
 public class Attachment {
 
@@ -15,6 +15,10 @@ public class Attachment {
 	private double fileSize;
 	
 	private String addTime;
+	
+	private String uid;
+	
+	private Integer type;
 	
 	public Integer getId() {
 		return id;
@@ -70,6 +74,22 @@ public class Attachment {
 
 	public void setDownloadAble(boolean downloadAble) {
 		this.downloadAble = downloadAble;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 	
 }
