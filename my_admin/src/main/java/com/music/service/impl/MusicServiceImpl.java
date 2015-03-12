@@ -2,6 +2,9 @@ package com.music.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +20,9 @@ import org.jaudiotagger.audio.mp3.MP3File;
 import org.jaudiotagger.tag.TagException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
 import com.music.core.model.Music;
@@ -51,6 +57,7 @@ public class MusicServiceImpl extends CommonMusicServiceImpl{
 		for(File f : file.listFiles()){
 			if(f.isDirectory()) continue;
 			fname = f.getName().replace("`", "\\`").replace("'", "\'");
+			
 			try {
 				mp3 = (MP3File) AudioFileIO.read(f);
 				MP3AudioHeader audioHeader = mp3.getMP3AudioHeader();
@@ -70,7 +77,7 @@ public class MusicServiceImpl extends CommonMusicServiceImpl{
 			singer = singerService.getByName(singerName);
 			if(singer == null) singer = unknowSinger;
 			sql = "insert ignore into t_music(name,singerId,time,uri,extension,downloadUrl,`addTime`) values(replace(\""+fname.substring(fname.indexOf("-")+1, fname.lastIndexOf("."))+"\",\"'\",\"''\"),"
-				 + "'" + singer.getId() + "','" + time + "','\\\\"+f.getName().replace("'", "")+"','" 
+				 + "'" + singer.getId() + "','" + time + "','"+f.getName().replace("'", "")+"','" 
 				 + fname.substring(fname.lastIndexOf(".")+1) + "',replace(\""+f.getAbsolutePath().replace("\\", "\\\\")+"\",\"'\",\"''\"),'"+ addTime + "')";
 			sqls.add(sql);
 		}
@@ -88,15 +95,35 @@ public class MusicServiceImpl extends CommonMusicServiceImpl{
 	}
 	
 	@Override
-	public Music insert(Music music) {
-		// TODO Auto-generated method stub
-		return super.insert(music);
+	public Music insert(final Music music) {
+		final String sql = "insert into t_music(name,singerId,time,uri,extension,downloadUrl,addTime,language,isIndex) values(?,?,?,?,?,?,?,?,?) ";
+		KeyHolder kh = new GeneratedKeyHolder();
+		jdbc.update(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
+				PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+				ps.setString(1, music.getName());
+				ps.setInt(2, music.getSingerId());
+				ps.setString(3, music.getTime());
+				ps.setString(4, music.getUri());
+				ps.setString(5, music.getExtension());
+				ps.setString(6, music.getDownloadUrl());
+				ps.setString(7, music.getAddTime());
+				ps.setInt(8, music.getLanguage());
+				ps.setInt(9, music.getIsIndex());
+				return ps;
+			}
+		}, kh);
+		music.setId(kh.getKey().intValue());
+		return music;
 	}
 	
 	@Override
-	public int update(Music music) {
-		// TODO Auto-generated method stub
-		return super.update(music);
+	public Music update(Music music) {
+		String sql = "update t_music set name=?, singerId=?, time=?, uri=?, extension=?, downloadUrl=?, addTime=?, language=?, isIndex=? where id = ?";
+		jdbc.update(sql, music.getName(), music.getSingerId(), music.getTime(), music.getUri(), music.getExtension(), music.getDownloadUrl(), 
+				music.getAddTime(), music.getLanguage(), music.getIsIndex(),music.getId());
+		return music;
 	}
 
 	@Autowired

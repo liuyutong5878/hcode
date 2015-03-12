@@ -8,11 +8,12 @@
 <%@ include file="/common/header.jsp" %>
 </head>
 <body>
-	<div class="search-bar">
+	<div class="search-bar" style="margin-bottom:5px;">
 		<form id="query-form">
 			<input type="hidden" id="pageNow" name="pageNow"/>
-			<input type="text" name="singerName" placeHolder="请输入歌手名"/>
+			<input type="text" class="form-control"  style="width:200px;float:left;" name="singerName" placeHolder="请输入歌手名"/>
 			<a class="btn btn-primary btn-query">查询</a>
+			<a class="btn btn-primary btn-add" href="/singer/edit.htm">新增</a>
 		</form>
 	</div>
 	<table class="table table-bordered">
@@ -65,7 +66,8 @@
 					for(var i=0; i<data.length;i++){
 						htm += "<tr><td>"+data[i].name+"</td><td>"+data[i].englishName+"</td><td>"+data[i].sex+"</td>";
 						htm += "<td>"+data[i].stype+"</td><td>"+data[i].country+"</td><td>"+data[i].district+"</td><td>"+data[i].profile+"</td>";
-						htm += "<td>"+data[i].isHot+"</td><td><a class='btn btn-default' href='/singer/"+data[i].id+"/edit.htm'>编辑</a>";
+						htm += "<td>"+data[i].isHot+"</td><td><a class='btn btn-default' href='/singer/edit.htm?singerId="+data[i].id+"'>编辑</a>";
+						htm += "<a href=javascript:singers.del("+data[i].id+"); class='btn btn-danger'>删除</a>";
 						htm += "<a class='btn btn-default' onclick='singers.setHot("+data[i].id+")'>置顶</a></td></tr>";
 					}
 					$("#tbody").html(htm);
@@ -90,6 +92,11 @@
 					alert("服务器内部出错");
 				}
 			});
+		},
+		del:function(singerId){
+			if(confirm("确认要删除该歌手吗?")){
+				window.location.href="/singer/"+singerId+"/del.htm";
+			}
 		}
 	}
 	

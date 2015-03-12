@@ -37,8 +37,8 @@ public abstract class CommonSingerServiceImpl implements SingerService{
 	
 	@Override
 	public Singer getByName(String name) {
-		String sql = "select * from t_singer where `name` = ?";
-		List<Singer> singers = jdbc.query(sql, new Object[]{name}, new BeanPropertyRowMapper<Singer>(Singer.class));
+		String sql = "select * from t_singer where `name` like ?";
+		List<Singer> singers = jdbc.query(sql, new Object[]{"%"+name+"%"}, new BeanPropertyRowMapper<Singer>(Singer.class));
 		if(singers != null && singers.size() > 0){
 			return singers.get(0);
 		}
@@ -151,6 +151,18 @@ public abstract class CommonSingerServiceImpl implements SingerService{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public int del(Integer singerId) {
+		String sql = "delete from t_singer where id = ? ";
+		return jdbc.update(sql, singerId);
+	}
+	
+	@Override
+	public List<Singer> searchByName(String name) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	public abstract void setJdbc(JdbcTemplate jdbc);

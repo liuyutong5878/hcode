@@ -2,10 +2,12 @@ package com.music.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,7 @@ import com.google.gson.Gson;
 import com.music.core.model.Attachment;
 import com.music.core.service.AttachmentService;
 import com.music.core.service.MusicService;
+import com.music.util.SystemUtil;
 
 @Controller
 @RequestMapping("/file")
@@ -27,6 +30,8 @@ public class FileController {
 
 	@Autowired
 	private AttachmentService attachmentService;
+	
+	private Logger loger = Logger.getLogger(FileController.class);
 	
 	@Autowired
 	private MusicService musicService;
@@ -45,20 +50,18 @@ public class FileController {
 				attachment.setUri("/attachment/" + fileName);
 				attachment.setDownloadUrl("");
 				attachment.setDownloadAble(false);
-				
-				attachment.setAddTime("");
+				attachment.setAddTime(SystemUtil.getDateTimeStr(new Date(), "yyyy-MM-dd HH:mm:ss"));
 				
 				//保存文件
-				File serverFile = new File("D://tmp/attachment" + fileName);
+				File serverFile = new File(SystemUtil.getProp("uploadPath") + fileName);
 				if(!serverFile.exists()){
 					serverFile.createNewFile();
 					FileCopyUtils.copy(file.getBytes(), serverFile);
 				}else{
-					System.out.println("文件" +fileName+ "已存在-----");
+					loger.error("文件【"  + fileName + "】已存在");
 				}
-				
 			} catch (IOException e) {
-				e.printStackTrace();
+				loger.error("文件上传出错-->> "+e);
 			}
 		}
 		return "/attachment/file_list";
@@ -85,7 +88,7 @@ public class FileController {
 	
 	
 	public String deleteFile(HttpServletRequest request){
-		
+		//TODO delete file
 		return "";
 	}
 }

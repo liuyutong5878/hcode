@@ -4,22 +4,32 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>首页</title>
+<title>音乐管理后台</title>
 <%@ include file="/common/header.jsp" %>
 <style type="text/css">
 	.panel-primary{margin-left:20px;width: 260px;}
 	#accordion{margin-right:5px; float:left;}
 	.tabWrap{position:absolute;left:240px;top:63px;}
 	.hlb_container{background-color:green;width:1000px;height:100%;}
+	.active{color:red;}
 </style>
 
 <script type="text/javascript">
 	$(function(){
+		$(".list-group-item a").bind("click",function(){
+			$(this).addClass("active");
+			var _this = $(this);
+			$(".list-group-item a").each(function(){
+				if(_this.html() != $(this).html()){
+					$(this).removeClass("active");
+				}
+			});
+			
+		});
 		
 	});
 	
 	function addTab(title, url){
-		
 		
 	}
 	
@@ -46,7 +56,7 @@
 			   	</div>
 			   <ul class="list-group panel-collapse collapse in" id="collapseOne">
 			      <li class="list-group-item" ><a href="/main/showUserList.htm" target="rt_page">用户列表</a></li>
-			      <li class="list-group-item" ><a href="/singer/showList.htm" target="rt_page">singleList</a></li>
+			      <li class="list-group-item" ><a href="/singer/showList.htm" target="rt_page">歌手列表</a></li>
 			      <li class="list-group-item"><a href="javascript:addTab('控件','http://www.baidu.com')">权限列表</a></li>
 			   </ul>
 			</div>
@@ -70,10 +80,7 @@
 			   	</h3>
 			   </div>
 			   <ul class="list-group panel-collapse collapse" id="collapse3">
-			      <li class="list-group-item">免费域名注册</li>
-			      <li class="list-group-item">免费 Window 空间托管空间托管空间托管</li>
 			      <li class="list-group-item">图像的数量</li>
-			      <li class="list-group-item">24*7 支持</li>
 			      <li class="list-group-item">每年更新成本</li>
 			   </ul>
 			</div>
@@ -83,14 +90,5 @@
 	  	<iframe name="rt_page" id="pageFrame" style="border:none;" width="100%;" height="1000px;"></iframe>
 	  </div>
 	</div>
-<!-- 	<div class="tabWrap">
-		<ul id="myTab" class="nav nav-tabs" style="border-bottom:none;">
-			<li class="active">
-		      <a href="#home" data-toggle="tab">
-		         welcome!
-		      </a>
-	   		</li>
-		</ul>
-	</div> -->
 </body>
 </html>

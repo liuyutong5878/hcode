@@ -5,11 +5,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
@@ -24,6 +26,8 @@ public class MusicController {
 
 	@Autowired
 	private MusicService musicService;
+	
+	private Logger loger = Logger.getLogger(MusicController.class);
 	
 	@ResponseBody
 	@RequestMapping(value="/listTypes")
@@ -83,5 +87,23 @@ public class MusicController {
 		boolean b = musicService.addToIndex(ids);
 		if(b) return "success";
 		return "failed";
+	}
+	
+	@RequestMapping("/{musicId}/edit")
+	public String edit(@PathVariable Integer musicId, Model model){
+		Music music = musicService.getById(musicId);
+		model.addAttribute("music", music);
+		return "/music/music_edit";
+	}
+	
+	@RequestMapping(value="/save",method=RequestMethod.POST)
+	public String save(Music music){
+		Music rtMusic = null;
+		if(music.getId() == null){ //add
+			rtMusic = musicService.insert(music);
+		}else{ //update
+			rtMusic = musicService.update(music);
+		}
+		return "redirect:/music/"+rtMusic.getId()+"/edit.htm";
 	}
 }

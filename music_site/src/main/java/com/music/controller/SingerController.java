@@ -43,8 +43,6 @@ public class SingerController {
 	@RequestMapping("/{id}/loadIcon")
 	public void loadIcon(@PathVariable Integer id, HttpServletResponse response){
 		Attachment attachment = attachService.getById(id);
-		singerService.loadIcon(attachment, response);
-		
+		if(attachment != null) singerService.loadIcon(attachment, response);
 	}
-	
 }

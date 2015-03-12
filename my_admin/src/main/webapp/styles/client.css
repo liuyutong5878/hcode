@@ -1,0 +1,49 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    overflow: hidden;
+    background: #000000;
+    margin: 0 auto;
+    font-size: 12px;
+}
+
+#container {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    align: middle;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#loadingDiv {
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+    color: #aaa;
+    text-align: center;
+}
+
+#loadingImg img {
+    vertical-align:middle;
+}
+
+#bottomTxt {
+    color: #CCCCCC;
+    width: 100%;
+    height: 20px;
+    background-color: #000000;
+    float: left;
+    padding-top: 5px;
+    text-align: left;
+}
+
+#loadingImg{
+    position: absolute;
+    left: 45%;
+    top: 45%;
+}

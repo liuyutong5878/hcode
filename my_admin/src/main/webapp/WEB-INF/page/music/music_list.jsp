@@ -94,10 +94,11 @@
 			});
 		});
 		
-		$(".addToType").bind("click",function(){
+		$("#tbody").delegate(".addToType","click",function(){
 			$("#musicId").val($(this).attr("rowId"));
 			$("#myModalLabel").html("添加【" + $(this).attr("musicName") + "】到类库");
 		});
+		
 		mpg.initSelect();
 		mpg.query();
 		
@@ -164,7 +165,7 @@
 						htm += "<td>"+data[i].uri+"</td><td>"+data[i].downloadUrl+"</td><td>"+data[i].addTime+"</td><td>"+(data[i] && data[i].isIndex==1 ? '是' : '') +"</td>";
 						htm += "<td><a class='btn btn-default addToType' data-toggle='modal' data-target='#myModal' musicName='"+data[i].name+"' rowId='"+data[i].id+"'>添加到类别</a>";
 						htm += "<a class='btn btn-default' onclick='javascript:mpg.setIndex("+data[i].id+")'>置顶</a>";
-						htm += "<a class='btn btn-default'>编辑</a><a href='javascript:mpg.del("+data[i].id+")' class='btn btn-default'>删除</a></td></tr>";
+						htm += "<a class='btn btn-default' href='/music/"+data[i].id+"/edit.htm'>编辑</a><a href='javascript:mpg.del("+data[i].id+")' class='btn btn-default'>删除</a></td></tr>";
 					}
 					$("#tbody").append(htm);
 					$(".pageNav").pageNav(pageObj,mpg.query);

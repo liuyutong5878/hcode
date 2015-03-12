@@ -35,4 +35,9 @@ public interface SingerService {
 	Singer update(Singer singer);
 	
 	void loadIcon(Attachment attachment, HttpServletResponse response);
+	
+	int del(Integer singerId);
+	
+	List<Singer> searchByName(String name);
+	
 }

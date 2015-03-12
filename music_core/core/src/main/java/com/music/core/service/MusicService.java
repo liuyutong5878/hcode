@@ -12,7 +12,7 @@ public interface MusicService {
 	
 	Music insert(Music music);
 	
-	int update(Music music);
+	Music update(Music music);
 	
 	int updateMusicLib();
 	

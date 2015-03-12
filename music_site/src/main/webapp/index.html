@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/images/music.png"/>
 <title>首页</title>
 <link rel="stylesheet" type="text/css" href="../plugin/css/style.css">
 <!-- <script src="/js/jquery-1.8.3.min.js"></script> -->
@@ -42,7 +43,7 @@
 
 	<div data-role="page" id="pageone">
 	  <div data-role="header">
-	    <h1> welcome home</h1>
+	    <h1> welcome ！ </h1>
 		<div data-role="navbar">
 	      <ul>
 	        <li><a href="#" data-icon="home" class="ui-btn-active">首页</a></li>
@@ -78,7 +79,6 @@
 <script>
 	var mypage = {
 		init:function(){
-// 			this.waitLoad();
 			$.ajax({
 				async:false,
 				type:'post',
@@ -89,16 +89,13 @@
 					var music;
 					for(var i=0; i<data.length; i++){
 						music = {
-							  mp3:'/music/' + data[i].id + "/load.htm",
-// 							  mp3:'/sound/song.mp3',
-// 		                      oga:'mix/1.ogg',
+							  mp3:'/music/' + data[i].id + "/download.htm",
 		                      title:data[i].singer+"-"+data[i].name,
-// 		                      artist:data[i].singer,
+		                      artist:data[i].singer,
 		                      rating:4,
 		                      buy:data[i].downloadUrl,	//buy字段换成下载链接字段
-		                      //price:'0.99',
 		                      duration:data[i].time,
-		                      cover:'mix/1.png'
+		                      cover:'singer/' + data[i].id + "/loadIcon.htm"
 						}; 
 						mypage.myPlaylist.push(music);
 					}

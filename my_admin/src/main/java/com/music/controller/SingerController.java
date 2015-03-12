@@ -2,7 +2,6 @@ package com.music.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,10 +75,14 @@ public class SingerController {
 		return gson.toJson("成功更新" + rows + "条记录");
 	}
 	
-	@RequestMapping("/{id}/edit")
-	public String editSinger(@PathVariable Integer id,Model model){
-		Singer singer = singerService.getById(id);
-		model.addAttribute("singer", singer);
+	@RequestMapping("/edit")
+	public String editSinger(Model model, HttpServletRequest request){
+		String idStr = request.getParameter("singerId");
+		if(StringUtils.isNotBlank(idStr)){
+			Integer id = Integer.parseInt(idStr);
+			Singer singer = singerService.getById(id);
+			model.addAttribute("singer", singer);
+		}
 		List<Country> countrys = countryService.getAll();
 		model.addAttribute("countrys", countrys);
 		return "/singer/singer_edit";
@@ -135,4 +139,29 @@ public class SingerController {
 		}
 		return "redirect:/singer/"+rtSinger.getId()+"/edit.htm";
 	}
+	
+
+	@RequestMapping("/{singerId}/del.htm")
+	public String singerDel(@PathVariable Integer singerId){
+		singerService.del(singerId);
+		return "redirect:/singer/showList.htm";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/search",produces="text/json;charset=UTF-8")
+	public String search(HttpServletRequest request){
+		String name = request.getParameter("keyword");
+		String singerId = request.getParameter("singerId");
+		String callback = request.getParameter("callback");
+		
+		Gson gson = new Gson();
+		if(StringUtils.isNotBlank(singerId)){
+			Singer singer = singerService.getById(Integer.parseInt(singerId));
+			return callback + "(" + gson.toJson(singer) + ")";
+		}else{
+			List<Singer> singers = singerService.searchByName(name);
+			return callback + "(" + gson.toJson(singers) + ")";
+		}
+	}
+	
 }

@@ -4,11 +4,9 @@ import java.util.List;
 
 public interface CommonService<T> {
 
-	int add(T entity);
-	
 	int deleteById(Integer id);
 	
-	int update(T entity);
+	T update(T entity);
 	
 	T getById(Integer id);
 	

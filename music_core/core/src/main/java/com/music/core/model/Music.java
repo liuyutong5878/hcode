@@ -11,6 +11,8 @@ public class Music {
 	
 	private String singer;
 	
+	private Integer singerId;
+	
 	private String extension;
 	
 	private String uri;
@@ -18,6 +20,8 @@ public class Music {
 	private String downloadUrl;
 	
 	private String addTime;
+	
+	private Integer language;
 	
 	/**是否置于首页*/
 	private Integer isIndex;
@@ -92,6 +96,22 @@ public class Music {
 
 	public void setIsIndex(Integer isIndex) {
 		this.isIndex = isIndex;
+	}
+
+	public Integer getSingerId() {
+		return singerId;
+	}
+
+	public void setSingerId(Integer singerId) {
+		this.singerId = singerId;
+	}
+
+	public Integer getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(Integer language) {
+		this.language = language;
 	}
 	
 }

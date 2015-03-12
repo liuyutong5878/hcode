@@ -23,7 +23,7 @@ public abstract class CommonMusicServiceImpl implements MusicService{
 	
 	protected JdbcTemplate jdbc;
 	
-	private static final String SQL_MUSIC  = "SELECT tm.id,ifnull(tm.isIndex,0) isIndex,tm.name,ts.name singer,tm.time,tm.uri,tm.extension,tm.downloadUrl,"
+	private static final String SQL_MUSIC  = "SELECT tm.id,ifnull(tm.isIndex,0) isIndex,tm.name,tm.singerId,ts.name singer,tm.time,tm.uri,tm.extension,tm.downloadUrl,"
 			+ "tm.addTime,tm.language FROM t_music tm LEFT JOIN t_singer ts ON(ts.id = tm.`singerId`) where 1 = 1 ";
 	
 	@Override
@@ -34,13 +34,14 @@ public abstract class CommonMusicServiceImpl implements MusicService{
 
 	@Override
 	public Music insert(Music music) {
+		
 		return null;
 	}
 
 	@Override
-	public int update(Music music) {
+	public Music update(Music music) {
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 
 	@Override

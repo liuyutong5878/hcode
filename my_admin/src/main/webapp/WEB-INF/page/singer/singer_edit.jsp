@@ -8,6 +8,7 @@
 <%@ include file="/common/header.jsp" %>
 </head>
 <body>
+	<span>当前位置:<a href="/singer/showList.htm">歌手列表</a>&gt;&gt;${not empty singer.id ? '编辑歌手' : '新增歌手'}</span>
 	<form class="form-horizontal" action="/singer/save.htm" role="form" id="form" method="post" style="border-left:1px solid #ccc;" enctype="multipart/form-data">
 	   <div class="form-group">
 	      <label for="firstname" class="col-sm-2 control-label">名称</label>
@@ -109,23 +110,8 @@
 		$(".btn-save").bind("click",function(){
 			$("#form").submit();
 		});
-		
-		/* $(".btn-save").bind("click",function(){
-			
-			$.ajax({
-				type:'post',
-				url:'/singer/save.htm',
-				data:$("#form").serializeArray(),
-				success:function(data){
-					alert(data);
-				},
-				error:function(){
-					alert("保存出错");
-				}
-			});
-			
-		}); */
-		
+	
+		$("select[name='countryId']").select2();
 	});
 	
 	

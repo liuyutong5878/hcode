@@ -1,5 +1,8 @@
 package com.music.service.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +10,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
 import com.music.model.User;
@@ -18,10 +24,20 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private JdbcTemplate jdbc;
 	
-	public int add(User user) {
-		String sql  = "insert into admin_user(username, password) values(?, ?)";
-		int row = jdbc.update(sql, user.getUserName(), user.getPassword());
-		return row;
+	public User add(final User user) {
+		final String sql  = "insert into admin_user(username, password) values(?, ?)";
+		KeyHolder kh = new GeneratedKeyHolder();
+		jdbc.update(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
+				PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+				ps.setString(1, user.getUserName());
+				ps.setString(2, user.getPassword());
+				return ps;
+			}
+		}, kh);
+		user.setId(kh.getKey().intValue());
+		return user;
 	}
 
 	public int deleteById(Integer id) {
@@ -30,15 +46,15 @@ public class UserServiceImpl implements UserService{
 		return row;
 	}
 
-	public int update(User user) {
+	public User update(User user) {
 		String sql = "update admin_user set username = ?, password = ? where id = ?";
 		int row = jdbc.update(sql, user.getUserName(), user.getPassword(), user.getId());
-		return row;
+		return user;
 	}
 
 	public User getById(Integer id) {
 		String sql = "select id,username,password from admin_user where id = ?";
-		User user = jdbc.queryForObject(sql, new Object[]{id}, new BeanPropertyRowMapper<User>());
+		User user = jdbc.queryForObject(sql, new Object[]{id}, new BeanPropertyRowMapper<User>(User.class));
 		return user;
 	}
 

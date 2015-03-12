@@ -19,12 +19,6 @@ import com.music.core.service.AttachmentService;
 public abstract class CommonAttachmentServiceImpl implements AttachmentService{
 	
 	protected JdbcTemplate jdbc;
-	
-	@Override
-	public int add(Attachment entity) {
-		
-		return 0;
-	}
 
 	@Override
 	public int deleteById(Integer id) {
@@ -33,8 +27,8 @@ public abstract class CommonAttachmentServiceImpl implements AttachmentService{
 	}
 
 	@Override
-	public int update(Attachment entity) {
-		return 0;
+	public Attachment update(Attachment entity) {
+		return entity;
 	}
 
 	@Override

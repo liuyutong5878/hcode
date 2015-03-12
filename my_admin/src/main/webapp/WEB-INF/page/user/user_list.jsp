@@ -33,7 +33,6 @@
 <script type="text/javascript">
 	$(function(){
 		users.query();
-		
 	});
 	
 	var users = {
@@ -50,7 +49,8 @@
 					var data = pageObj["list"];
 					for(var i=0; i<data.length;i++){
 						htm += "<tr><td>"+data[i].userName+"</td><td>"+data[i].password+"</td><td>"+data[i].email+"</td>";
-						htm += "<td>"+data[i].sex+"</td><td><a class='btn btn-default' href='#'>编辑</a></td></tr>";
+						htm += "<td>"+data[i].sex+"</td><td><a class='btn btn-default' href='/main/"+data[i].id+"/userEdit.htm'>编辑</a>";
+						htm += "<a class='btn btn-danger' href='javascript:users.del("+data[i].id+");'>删除</a></td></tr>";
 					}
 					$("#tbody").html(htm);
 					$(".pageNav").pageNav(pageObj,users.query);
@@ -59,6 +59,11 @@
 					alert("服务器内部出错");
 				}
 			});
+		},
+		del:function(userId){
+			if(confirm("确认删除该用户吗?")){
+				window.location.href="/main/"+userId+"/userDel.htm";
+			}
 		}
 	}
 	
