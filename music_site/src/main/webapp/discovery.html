@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/images/music.png"/>
+<title>首页</title>
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css">
+<link rel="stylesheet" type="text/css" href="../plugin/css/style.css">
+<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/demo.css">
+
+<style>
+	#pageone{
+		background:url("images/bg.jpg") repeat scroll 0 0 #444;
+		background-size :100% 100%;
+	}
+	.mycontent{}
+	.row{
+/* 		background:#ccc; */
+		height:50px; margin-top:10px;
+		line-height:50px;
+		border-bottom:1px #ccc solid;
+	}
+	.row img{
+ 		filter:alpha(opacity=50); /*IE滤镜，透明度50%*/ 
+ 		-moz-opacity:0.5; /*Firefox私有，透明度50%*/ 
+ 		opacity:0.5;/*其他，透明度50%*/
+ 		margin-right:10px; 
+	}
+	.m_type{position:relative;top:-20px;line-height:20px;color:#ccc;font-family:'Microsoft YaHei';}
+	.jumpType{cursor:pointer;font-size:30px;font-family:'Microsoft YaHei';float:right;}
+	.mycontent a{text-decoration:none;}
+</style>
+</head>
+<body>
+
+	<div data-role="page" id="pageone">
+	  <div data-role="header">
+	    <h1> welcome home</h1>
+		<div data-role="navbar">
+	      <ul>
+	        <li><a href="/" target="_self"  data-icon="home">首页</a></li>
+	        <li><a href="#" data-icon="arrow-l"  class="ui-btn-active">发现</a></li>
+			<li><a href="/singer.html" target="_self" data-icon="arrow-r">歌手</a></li>
+	        <li><a href="/search.html" target="_self" data-icon="search">搜索</a></li>
+	      </ul>
+   		</div>
+	  </div>
+	
+	  <div class="mycontent" data-role="content">
+	  </div>
+	</div> 
+</body>
+<script>
+	$(function(){
+		mtype.init();
+	});
+	
+	var mtype = {
+		init:function(){
+			$.ajax({
+				type:'post',
+				url:'/music/listTypes.htm',
+				dataType:'json',
+				success:function(data){
+					var html = '';
+					for(var i=0; i<data.length;i++){
+						html += '<div class="row"><img src="/images/music-book.png"  width="50px" height="50px"/><span class="m_type">';
+						html += data[i].name + '</span><a style="color:#ccc;" target="_self" href="/discovery/list.htm?typeId='+data[i].id+'" class="jumpType">></a></div>';
+					}
+					$(".mycontent").empty();
+					$(".mycontent").append(html);
+				}
+			});
+		}
+	};
+	
+</script>
+</html>
